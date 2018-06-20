@@ -49,12 +49,12 @@ typedef tuple< int, int, int > III;
 #define dump4(x,y,z,a) if(TRACE) { cerr << #x << " = " << (x) << ", " << #y << " = " << (y) << ", " << #z << " = " << (z) << ", " << #a << " = " << (a) << endl; }
 #define dumpAR(ar) if(TRACE) { FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
 
-// $ g++ -std=c++11 -Wall -O2 -D_GLIBCXX_DEBUG x.cpp && ./a.out
+// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG x.cpp && ./a.out
 const int MAX_N=1e5+1;
-int A[MAX_N];
+LL A[MAX_N];
 int N;
 
-int solve() {
+LL solve() {
   return -1;
 }
 
@@ -69,6 +69,3 @@ int main() {
   
   return 0;
 }
-
-// 1. more precision in double in iostream
-// cout<<setprecision(12)<<fixed;
