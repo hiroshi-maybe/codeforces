@@ -73,7 +73,7 @@ template<class T> using VV=vector<vector<T>>;
  
  Correct condition:
   - parity of ∑ B[l..r] is even
-  - ∑ B[l..r] >= 2*B[l]
+  - ∑ B[l..r] >= 2*max{ B[l..r] }
 
  I couldn't figure out how to query second condition for B[i] (i=0..N-1).
  I read editorial http://codeforces.com/blog/entry/62013
