@@ -24,6 +24,8 @@
 using namespace std;
 // type alias
 typedef long long LL;
+typedef pair< int , int > II;
+typedef tuple< int, int, int > III;
 typedef vector<int> VI;
 typedef vector<string> VS;
 typedef vector<vector<int>> VVI;
