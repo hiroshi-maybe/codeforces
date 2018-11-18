@@ -17,7 +17,7 @@ fi
 pdir=$PWD
 pfilepath="${pdir}/${probname}.cpp"
 infilepath="${pdir}/${probname}.in"
-`g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG ${pfilepath}`
+`g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address ${pfilepath}`
 
 if [ $? -ne 0 ]; then
   exit 1

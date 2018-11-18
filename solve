@@ -21,7 +21,7 @@ touch "${ifilepath}"
 touch "${ofilepath}"
 
 sed -i '' -e "s/{\$__PROB__}/${probname}/g" ${pfilepath}
-command="g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG ${probname}.cpp && ./a.out"
+command="g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address ${probname}.cpp && ./a.out"
 echo $command
 
 open "${pfilepath}"

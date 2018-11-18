@@ -62,7 +62,7 @@ template<class T> inline T SMAX(T& a, const T b) { return a=(a<b)?b:a; }
 template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; } }
 
 // $ ../batch {$__PROB__} | diff {$__PROB__}.out -
-// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG {$__PROB__}.cpp && ./a.out
+// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address {$__PROB__}.cpp && ./a.out
 const int MAX_N=1e5+1;
 LL A[MAX_N];
 int N;
