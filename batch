@@ -19,6 +19,10 @@ pfilepath="${pdir}/${probname}.cpp"
 infilepath="${pdir}/${probname}.in"
 `g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG ${pfilepath}`
 
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
 body=""
 t=0
 res=""
