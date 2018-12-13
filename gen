@@ -21,6 +21,11 @@ touch "${ifilepath}"
 touch "${ofilepath}"
 
 sed -i '' -e "s/{\$__PROB__}/${probname}/g" ${pfilepath}
+curdate=`date +%-m/%-d/%Y`
+curtime=`date +%H:%M`
+sed -i '' -e "s|{\$__DATE__}|${curdate}|g" ${pfilepath}
+sed -i '' -e "s|{\$__TIME__}|${curtime}|g" ${pfilepath}
+
 command="g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address ${probname}.cpp && ./a.out"
 echo $command
 

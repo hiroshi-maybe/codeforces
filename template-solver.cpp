@@ -63,20 +63,30 @@ template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin
 
 // $ ../batch {$__PROB__} | diff {$__PROB__}.out -
 // $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address {$__PROB__}.cpp && ./a.out
-const int MAX_N=1e5+1;
+
+/*
+ 
+ {$__DATE__}
+ 
+ {$__TIME__}-
+ 
+ */
+
+const int MAX_N=1e6+1;
 LL A[MAX_N];
 int N;
+LL a,b;
 
 void solve() {
+  cout<<a+b<<endl;
 }
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(0);
+  cout<<setprecision(12)<<fixed;
   
-  cin>>N;
-  REP(i,N) cin>>A[i];
-  
+  cin>>a,b;
   solve();
   
   return 0;

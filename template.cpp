@@ -62,7 +62,7 @@ template<class T> inline T SMAX(T& a, const T b) { return a=(a<b)?b:a; }
 template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; } }
 
 // $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address x.cpp && ./a.out
-const int MAX_N=1e5+1;
+const int MAX_N=1e6+1;
 LL A[MAX_N];
 int N;
 
@@ -72,6 +72,7 @@ void solve() {
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(0);
+  cout<<setprecision(12)<<fixed;
   
   cin>>N;
   REP(i,N) cin>>A[i];
