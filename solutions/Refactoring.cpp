@@ -94,58 +94,79 @@ const int MAX_N=3010+1;
 string W1[MAX_N],W2[MAX_N];
 int N;
 
-// This rolling hash library somehow TLEs on test case #14
-template<class T> struct RollingHash {
-public:
-  int M;
-  string P;
-  T d; // radix
-  T MOD; // MOD
-  T h; // d^(M-1) % MOD, helper to adjust rolling hash
-  T p; // hash code of P
-  RollingHash(string P, T d=131, T MOD=1e9+7): M(P.size()), P(P), d(d), MOD(MOD) {
-    this->h=powmod(d,M-1,MOD);
-    this->p=calcRollingHash(P);
-  }
-  
-  // Rolling hash x for X[i..<M]
-  // x=d^(M-1)*X[i]+d^(M-2)*X[i+1]+..+d^0*X[i+M-1]
-  T calcRollingHash(string X) {
-    T res=0;
-    for(int i=0; i<min((int)X.size(), M); ++i) {
-      res=(d*res)%MOD+X[i],res%=MOD;
+namespace RollingHash {
+  template<int MOD> struct ModInt {
+    unsigned int val;
+    ModInt(): val(0) {}
+    ModInt(int v) { norm(v%MOD); }
+    ModInt(long long v) { norm(v%MOD); }
+    ModInt& norm(long long v) {
+      v=v<0?v%MOD+MOD:v; // negative
+      v=v>=MOD?v-MOD:v; // mod
+      val=(unsigned int)v;
+      return *this;
     }
-    return res;
-  }
-  // incremental update of hash code
-  T updateRollingHash(T base, string S, int i) {
-    T res=d*(base+MOD-((T)S[i]*h)%MOD)%MOD+S[i+M];
-    res%=MOD;
-    return res;
-  }
-  
-  int doRabbinKarpMatch(string S) {
-    int N=S.size();
-    
-    // preprocessing
-    T s=calcRollingHash(S);
-    
-    for(int i=0; i<=N-M; ++i) {
-      dump3(i,s,p);
-      if(s==p/* && S.substr(i,M)==P*/) return i;
-      // incremental update of hash code
-      // s=d(t-S[i]h)+S[i+M]
-      s=updateRollingHash(s,S,i);
+    explicit operator bool() const { return val!=0; }
+    ModInt operator-() const { return ModInt(0)-*this; }
+    ModInt &operator+=(ModInt that) { return norm((long long)val+that.val); }
+    ModInt &operator-=(ModInt that) { return norm((long long)val-that.val); }
+    ModInt &operator*=(ModInt that) { val=(unsigned long long)val*that.val%MOD; return *this; }
+    ModInt &operator/=(ModInt that) { return *this*=that.inv(); }
+    ModInt operator+(ModInt that) const { return ModInt(*this)+=that; }
+    ModInt operator-(ModInt that) const { return ModInt(*this)-=that; }
+    ModInt operator*(ModInt that) const { return ModInt(*this)*=that; }
+    ModInt operator/(ModInt that) const { return ModInt(*this)/=that; }
+    ModInt pow(long long n) const {
+      ModInt x=*this, res=1;
+      while(n>0) {
+        if(n&1) res*=x;
+        x*=x,n>>=1;
+      }
+      return res;
     }
-    return -1;
-  }
-private:
-  T powmod(T a, T b, T MOD) {
-    T res=1;
-    for(T mask=1; mask<=b; mask<<=1) {
-      if(b&mask) res*=a, res%=MOD;
-      a*=a; a%=MOD;
+    ModInt inv() const { return (*this).pow(MOD-2); }
+    bool operator==(ModInt that) const { return val==that.val; }
+    bool operator!=(ModInt that) const { return val!=that.val; }
+  };
+  const int MOD0=1e9+7,MOD1=1e9+9;
+  using M0=ModInt<MOD0>;
+  using M1=ModInt<MOD1>;
+  M0 p0=rand()%MOD0,pinv0=p0.inv();
+  M1 p1=rand()%MOD1,pinv1=p1.inv();
+  vector<M0> P0{1}, PINV0{1};
+  vector<M1> P1{1}, PINV1{1};
+  struct H {
+    vector<pair<M0,M1>> hcum;
+    string str;
+    H(string s) : str(s) {
+      int N=(int)s.size();
+      while ((int)P0.size()<=N) {
+        P0.push_back(P0.back()*p0);
+        PINV0.push_back(PINV0.back()*pinv0);
+        P1.push_back(P1.back()*p1);
+        PINV1.push_back(PINV1.back()*pinv1);
+      }
+      hcum.resize(N+1);
+      hcum[0]={M0(0),M1(0)};
+      for(int i=0; i<N; ++i) {
+        hcum[i+1]={hcum[i].first+M0(s[i])*P0[i],hcum[i].second+M1(s[i])*P1[i]};
+      }
     }
+    // half-open range [l,r)
+    pair<M0,M1> hash(int r) { return { hcum[r].first, hcum[r].second }; }
+    pair<M0,M1> hash(int l, int r) {
+      return {
+        (hcum[r].first-hcum[l].first)*PINV0[l],
+        (hcum[r].second-hcum[l].second)*PINV1[l]
+      };
+    }
+  };
+  // Rabin-Karp algorithm
+  vector<int> match(H &s, H &p) {
+    int N=s.str.size(),M=p.str.size();
+    auto pp=p.hash(0,M);
+    vector<int> res;
+    for(int i=0; i<=N-M; ++i) if(s.hash(i,i+M)==pp) res.push_back(i);
     return res;
   }
 };
@@ -444,6 +465,61 @@ void solve_inspired_by_kmjp() {
   println("%s",t.c_str());
 }
 
+void solve_rh() {
+  string s="",t="",pre="",post="";
+  REP(i,N) {
+    int M=SZ(W1[i]);
+    int l=3010,r=-1;
+    REP(j,M) if(W1[i][j]!=W2[i][j]) SMIN(l,j),SMAX(r,j);
+    
+    if(r!=-1) {
+      string ss=W1[i].substr(l,r-l+1);
+      string tt=W2[i].substr(l,r-l+1);
+      string prepre=W1[i].substr(0,l);
+      string postpost=W2[i].substr(r+1);
+      reverse(ALL(prepre));
+      
+      if(s.empty()) {
+        s=ss,t=tt,pre=prepre,post=postpost;
+      } else {
+        if(ss!=s||tt!=t) {
+          dump4(ss,s,tt,t);
+          end();
+        }
+        
+        REP(j,SZ(pre)) if(j>=SZ(prepre)||prepre[j]!=pre[j]) {
+          pre.resize(j);
+          break;
+        }
+        REP(j,SZ(post)) if(j>=SZ(postpost)||postpost[j]!=post[j]) {
+          post.resize(j);
+          break;
+        }
+      }
+    }
+  }
+  reverse(ALL(pre));
+  s=pre+s+post;
+  t=pre+t+post;
+  auto ha=RollingHash::H(s).hash(0,s.size());
+  
+  REP(i,N) {
+    auto myrh=RollingHash::H(W1[i]);
+    string x=W1[i],y=W2[i];
+    for(int j=0;j+s.size()<=x.size();j++) {
+      if(myrh.hash(j,j+s.size())==ha) {
+        x=x.substr(0,j)+t+x.substr(s.size()+j);
+        break;
+      }
+    }
+    if(x!=y) end();
+  }
+  
+  println("YES");
+  println("%s",s.c_str());
+  println("%s",t.c_str());
+}
+
 
 int main() {
   ios_base::sync_with_stdio(false);
@@ -469,7 +545,8 @@ int main() {
     W2[i]=string(c);
 //    cin>>W2[i];
   }
-  solve();
+  //solve();
+  solve_rh();
   
   return 0;
 }
