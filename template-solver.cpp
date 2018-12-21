@@ -75,10 +75,8 @@ template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin
 const int MAX_N=1e6+1;
 LL A[MAX_N];
 int N;
-LL a,b;
 
 void solve() {
-  cout<<a+b<<endl;
 }
 
 int main() {
@@ -86,7 +84,8 @@ int main() {
   cin.tie(0);
   cout<<setprecision(12)<<fixed;
   
-  cin>>a,b;
+  cin>>N;
+  REP(i,N) cin>>A[i];
   solve();
   
   return 0;
