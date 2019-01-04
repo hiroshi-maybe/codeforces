@@ -22,7 +22,7 @@ touch "${ofilepath}"
 
 sed -i '' -e "s/{\$__PROB__}/${probname}/g" ${pfilepath}
 curdate=`date +%-m/%-d/%Y`
-curtime=`date +%H:%M`
+curtime=`date +%-H:%M`
 sed -i '' -e "s|{\$__DATE__}|${curdate}|g" ${pfilepath}
 sed -i '' -e "s|{\$__TIME__}|${curtime}|g" ${pfilepath}
 
