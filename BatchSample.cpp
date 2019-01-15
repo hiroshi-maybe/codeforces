@@ -61,18 +61,18 @@ template<class T> inline T SMAX(T& a, const T b) { return a=(a<b)?b:a; }
 #define dumpAR(ar) if(TRACE) { FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
 template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; } }
 
-// $ ../batch batch-sample | diff batch-sample.out -
-// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address batch-sample.cpp && ./a.out
+// $ ../batch BatchSample | diff BatchSample.out -
+// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address BatchSample.cpp && ./a.out
 
 /*
  
- 12/12/2018
+ 1/14/2019
  
- 16:15-
+ 16:07-
  
  */
 
-const int MAX_N=1e5+1;
+const int MAX_N=1e6+1;
 LL A[MAX_N];
 int N;
 
@@ -86,7 +86,6 @@ int main() {
   
   cin>>N;
   REP(i,N) cin>>A[i];
-  
   solve();
   
   return 0;

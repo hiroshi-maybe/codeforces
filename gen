@@ -8,11 +8,10 @@ fi
 # convert command line args to UpperCase
 # "./gen this is a pen" -> "ThisIsAPen.*" (.cpp, .in, .out)
 for arg; do
+	arg=`echo ${arg} | sed 's/[^a-zA-Z0-9]//g'` # filter alphanumeric
 	len=${#arg}
-	echo $len
 	initial=`echo ${arg:0:1} | tr a-z A-Z`
 	rest=${arg:1:len-1}
-	echo $initial $rest
 	probname="$probname$initial$rest"
 done
 
