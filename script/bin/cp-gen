@@ -18,7 +18,7 @@ done
 sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 pdir=$PWD
 
-temppath="${sdir}/template-solver.cpp"
+temppath="${sdir}/../template-solver.cpp"
 
 pfilepath="${pdir}/${probname}.cpp"
 ifilepath="${pdir}/${probname}.in"

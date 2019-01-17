@@ -61,14 +61,14 @@ template<class T> inline T SMAX(T& a, const T b) { return a=(a<b)?b:a; }
 #define dumpAR(ar) if(TRACE) { FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
 template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; } }
 
-// $ ../batch BatchSample | diff BatchSample.out -
+// $ cp-batch BatchSample | diff BatchSample.out -
 // $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address BatchSample.cpp && ./a.out
 
 /*
  
- 1/14/2019
+ 1/16/2019
  
- 16:07-
+ 18:29-
  
  */
 
@@ -77,6 +77,7 @@ LL A[MAX_N];
 int N;
 
 void solve() {
+  cout<<accumulate(A,A+N,0)<<endl;
 }
 
 int main() {
