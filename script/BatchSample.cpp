@@ -3,32 +3,14 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <set>
-#include <map>
-#include <iostream>
-#include <utility>
-#include <cctype>
-#include <queue>
-#include <stack>
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-#include <unordered_set>
-#include <unordered_map>
-#include <limits.h>
-#include <cstring>
-#include <tuple>
-#include <cassert>
-#include <numeric>
-#include <iomanip>
+#include <bits/stdc++.h>
 using namespace std;
 // type alias
 typedef long long LL;
-typedef pair< int , int > II;
-typedef tuple< int, int, int > III;
+typedef pair<int,int> II;
+typedef tuple<int,int,int> III;
 typedef vector<int> VI;
 typedef vector<string> VS;
-typedef vector<vector<int>> VVI;
 typedef unordered_map<int,int> MAPII;
 typedef unordered_set<int> SETI;
 template<class T> using VV=vector<vector<T>>;
@@ -47,28 +29,32 @@ template<class T> inline T SMAX(T& a, const T b) { return a=(a<b)?b:a; }
 // DP
 #define MINUS(dp) memset(dp, -1, sizeof(dp))
 #define ZERO(dp) memset(dp, 0, sizeof(dp))
-
 // stdout
 #define println(args...) fprintf(stdout, ##args),putchar('\n');
-
 // debug cerr
-#define TRACE true
-#define dump(x) if(TRACE) { cerr << #x << " = " << (x) << endl; }
-#define dump2(x,y) if(TRACE) { cerr << #x << " = " << (x) << ", " << #y << " = " << (y) << endl; }
-#define dump3(x,y,z) if(TRACE) { cerr << #x << " = " << (x) << ", " << #y << " = " << (y) << ", " << #z << " = " << (z) << endl; }
-#define dump4(x,y,z,a) if(TRACE) { cerr << #x << " = " << (x) << ", " << #y << " = " << (y) << ", " << #z << " = " << (z) << ", " << #a << " = " << (a) << endl; }
-#define dumpf(args...) if(TRACE) { fprintf(stderr, ##args); putchar('\n'); }
-#define dumpAR(ar) if(TRACE) { FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
-template<class Iter> void dumpc(Iter begin, Iter end) { if (TRACE) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; } }
+template<class Iter> void __kumaerrc(Iter begin, Iter end) { for(; begin!=end; ++begin) { cerr<<*begin<<','; } cerr<<endl; }
+void __kumaerr(istream_iterator<string> it) { (void)it; cerr<<endl; }
+template<typename T, typename... Args> void __kumaerr(istream_iterator<string> it, T a, Args... args) { cerr<<*it<<"="<<a<<", ",__kumaerr(++it, args...); }
+template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, const std::pair<S,T>& _p) { return _os<<"{"<<_p.first<<','<<_p.second<<"}"; }
+#define __KUMATRACE__ true
+#ifdef __KUMATRACE__
+#define dump(args...) { string _s = #args; replace(_s.begin(), _s.end(), ',', ' '); stringstream _ss(_s); istream_iterator<string> _it(_ss); __kumaerr(_it, args); }
+#define dumpc(ar) { cerr<<#ar<<": "; FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
+#define dumpC(beg,end) { cerr<<"~"<<#end<<": "; __kumaerrc(beg,end); }
+#else
+#define dump(args...)
+#define dumpc(ar)
+#define dumpC(beg,end)
+#endif
 
 // $ cp-batch BatchSample | diff BatchSample.out -
 // $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address BatchSample.cpp && ./a.out
 
 /*
  
- 1/16/2019
+ 1/28/2019
  
- 18:29-
+ 18:11-
  
  */
 

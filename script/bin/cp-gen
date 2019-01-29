@@ -41,5 +41,4 @@ echo $command
 
 # open generated files !!!!
 open "${pfilepath}"
-open "${ifilepath}"
-open "${ofilepath}"
+open "${ifilepath}" "${ofilepath}"
