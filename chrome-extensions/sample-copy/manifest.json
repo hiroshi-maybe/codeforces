@@ -1,0 +1,19 @@
+{
+  "name": "CF Sample Copy",
+  "description": "Batch copy of samples",
+  "version": "0.01",
+  "permissions": [
+  	"contextMenus",
+	"tabs"
+  ],
+  "content_scripts": [
+   {
+     "matches": ["https://codeforces.com/*/problem/*"],
+     "js": ["contentScript.js"]
+   }
+ ],
+  "background": {
+    "scripts": ["menu.js"]
+  },
+  "manifest_version": 2
+}
