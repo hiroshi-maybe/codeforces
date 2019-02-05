@@ -93,8 +93,8 @@ int N,M;
 
 int maxIndependentSet(vector<vector<int>> &G) {
   auto ztrans=[&](vector<int> &dp, int N) {
-    for(int mask=0; mask<(1<<N); ++mask) for(int i=0; i<N; ++i) {
-      if((mask&(1<<i))==0) dp[mask|(1<<i)]&=dp[mask]&dp[1<<i];
+    for(int i=0; i<N; ++i) for(int mask=0; mask<(1<<N); ++mask) {
+      if(mask&(1<<i)) dp[mask]&=dp[mask^(1<<i)];
     }
   };
   auto independentset=[&](int l, int r)->vector<int> {
