@@ -51,7 +51,9 @@ template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, con
  
  7:27-8:33 WA
  8:40 fixed a bug
- 21:30- another bug fix
+ 21:30-12:05 fixed bug and got AC
+ 
+ https://codeforces.com/blog/entry/71995
  
  */
 
@@ -59,60 +61,46 @@ int A[4];
 
 VV<int> res;
 void dfs(int p, VI &cur, VV<int> &path) {
-  if(accumulate(ALL(cur),0)==0) {
-    res=path;
-    return;
-  }
-  if(p<0||p>=4) {
-    return;
-  }
-  if(cur[p]==0) {
-    return;
-  }
   dump(p);
   dumpc(cur);
-  assert(cur[p]>0);
+
+  assert(p>=0&&p<4);
+  if(cur[p]==0) return;
+  cur[p]--;
+  if(accumulate(ALL(cur),0)==0) {
+    path.push_back({p});
+    res=path;
+    path.pop_back();
+    cur[p]++;
+    return;
+  }
   VI nei={p-1,p+1};
   FORR(i,nei) {
     if(i<0||i>=4) continue;
     if(cur[i]>0) {
       int delta=min(cur[p],cur[i]);
-      if(cur[i]==cur[p]) {
-        // go throu (3)
-        int next=i>p?(i+1):(i-1);
-        path.push_back({p,i,next});
-        cur[i]-=delta,cur[p]-=delta;
-        dfs(next,cur,path);
-        cur[i]+=delta,cur[p]+=delta;
-        path.pop_back();
-      } else if(cur[i]>cur[p]) {
-        // go through
-        int next=i>p?(i+1):(i-1);
+      if(cur[i]>=cur[p]+1) {
+        // go throuh
         path.push_back({p,i});
+        dumpc(path.back());
         cur[i]-=delta,cur[p]-=delta;
-        dfs(next,cur,path);
+        dfs(i,cur,path);
         cur[i]+=delta,cur[p]+=delta;
         path.pop_back();
       } else {
         // turn back
-        int next=i>p?(p-1):(p+1);
         path.push_back({p,i,p});
-        cur[i]-=delta,cur[p]-=delta+1;
-        dfs(next,cur,path);
-        cur[i]+=delta,cur[p]+=delta+1;
+        dumpc(path.back());
+        cur[i]-=delta,cur[p]-=delta-1;
+        dfs(p,cur,path);
+        cur[i]+=delta,cur[p]+=delta-1;
         path.pop_back();
       }
     }
   }
+  cur[p]++;
 }
 void solve() {
-  if(accumulate(A,A+4,0)==1) {
-    REP(i,4)if(A[i]) {
-      println("YES");
-      println("%d ", i);
-      return;
-    }
-  }
   REP(i,4) {
     VI cur(A,A+4);
     VV<int> path;
@@ -126,22 +114,24 @@ void solve() {
     VI ans;
     FORR(turn, res) {
       assert(SZ(turn));
-      if(SZ(turn)==2) {
+      if(SZ(turn)==1) {
+        int a=turn.front();
+        ans.push_back(a),A[a]--;
+      } else if(SZ(turn)==2) {
         int a=turn[0],b=turn[1];
+        ans.push_back(a),A[a]--;
         int x=min(A[a],A[b]);
-        REP(_,x) ans.push_back(a),ans.push_back(b);
+        REP(_,x) ans.push_back(b),ans.push_back(a);
         A[a]-=x,A[b]-=x;
       } else {
         assert(SZ(turn)==3);
         int a=turn[0],b=turn[1];
-        int x=min(A[a],A[b]);
+        int x=min(A[a]-1,A[b]);
         REP(_,x) ans.push_back(a),ans.push_back(b);
-        if(turn[2]==a) ans.push_back(a);
         A[a]-=x,A[b]-=x;
-        if(turn[2]==a) A[a]-=1;
       }
     }
-    
+    dumpC(A,A+4);
     assert(accumulate(A,A+4,0)==0);
     println("YES");
     map<int,int> cnt;
