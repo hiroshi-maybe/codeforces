@@ -49,7 +49,9 @@ template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, con
  
  2/2/2020
  
- 6:22-6:44
+ 6:22-6:44 AC
+ 
+ https://codeforces.com/blog/entry/73563
  
  */
 
