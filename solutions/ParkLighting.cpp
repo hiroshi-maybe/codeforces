@@ -31,7 +31,7 @@ template<class Iter> void __kumaerrc(Iter begin, Iter end) { for(; begin!=end; +
 void __kumaerr(istream_iterator<string> it) { (void)it; cerr<<endl; }
 template<typename T, typename... Args> void __kumaerr(istream_iterator<string> it, T a, Args... args) { cerr<<*it<<"="<<a<<", ",__kumaerr(++it, args...); }
 template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, const std::pair<S,T>& _p) { return _os<<"{"<<_p.first<<','<<_p.second<<"}"; }
-//#define __KUMATRACE__ true
+#define __KUMATRACE__ true
 #ifdef __KUMATRACE__
 #define dump(args...) { string _s = #args; replace(_s.begin(), _s.end(), ',', ' '); stringstream _ss(_s); istream_iterator<string> _it(_ss); __kumaerr(_it, args); }
 #define dumpc(ar) { cerr<<#ar<<": "; FORR(x,(ar)) { cerr << x << ','; } cerr << endl; }
@@ -42,47 +42,28 @@ template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, con
 #define dumpC(beg,end)
 #endif
 
-// $ cp-batch TheBestVacation | diff TheBestVacation.out -
-// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address TheBestVacation.cpp && ./a.out
+// $ cp-batch ParkLighting | diff ParkLighting.out -
+// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address ParkLighting.cpp && ./a.out
 
 /*
 
  5/26/2020
 
- 9:20-9:59 WA
- 21:34-21:35 AC after fixing an overflowing bug
+ 7:35-7:41 AC
 
  https://codeforces.com/blog/entry/77869
- https://twitter.com/kzyKT_M/status/1265320998779252736
- https://twitter.com/laycrs/status/1265320682109505536
 
  */
 
-const int MAX_N=1e6+1;
-LL D[MAX_N],A[MAX_N],X;
-int N;
+int N,M;
 
-LL cum1[MAX_N],cum2[MAX_N];
+int f(int n, int m) {
+  int res=n/2*m;
+  if(n%2==1) res+=(m+1)/2;
+  return res;
+}
 void solve() {
-  LL res=0;
-  REP(i,2*N) A[i]=D[i%N]*(D[i%N]+1)/2,D[i]=D[i%N];
-  reverse(A,A+2*N),reverse(D,D+2*N);
-  REP(i,2*N) cum2[i+1]=cum2[i]+A[i],cum1[i+1]=cum1[i]+D[i];
-  dumpC(D,D+2*N);
-  dumpC(cum1,cum1+2*N+1);
-  dumpC(cum2,cum2+2*N+1);
-  REP(i,2*N) {
-    int j=upper_bound(cum1,cum1+2*N+1,cum1[i]+X)-cum1;
-    if(j>2*N) continue;
-    if(j<=0) continue;
-    LL ans=cum2[j-1]-cum2[i];
-    LL rem=X-(cum1[j-1]-cum1[i]);
-    LL d=D[j-1];
-    ans+=rem*(d+d-rem+1)/2;
-    //dump(i,j,cum2[j-1]-cum2[i],rem);
-    SMAX(res,ans);
-  }
-  cout<<res<<endl;
+  cout<<min(f(N,M),f(M,N))<<endl;
 }
 
 int main() {
@@ -90,9 +71,11 @@ int main() {
   cin.tie(0);
   cout<<setprecision(12)<<fixed;
 
-  cin>>N>>X;
-  REP(i,N) cin>>D[i];
-  solve();
+  int t; cin>>t;
+  while(t--) {
+    cin>>N>>M;
+    solve();
+  }
 
   return 0;
 }
