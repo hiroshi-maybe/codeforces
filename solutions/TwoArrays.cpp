@@ -41,108 +41,87 @@ template<typename S, typename T> std::ostream& operator<<(std::ostream& _os, con
 #define dumpc(ar)
 #define dumpC(beg,end)
 #endif
-const int MOD=1000000007;
-//const int MOD=998244353;
-struct ModInt {
-  unsigned int val;
-  ModInt(): val(0) {}
-  ModInt(int v) { norm(v%MOD); }
-  ModInt(long long v) { norm(v%MOD); }
-  ModInt& norm(long long v) {
-    v=v<0?v%MOD+MOD:v; // negative
-    v=v>=MOD?v-MOD:v; // mod
-    val=(unsigned int)v;
-    return *this;
-  }
-  explicit operator bool() const { return val!=0; }
-  ModInt operator-() const { return ModInt(0)-*this; }
-  ModInt &operator+=(ModInt that) { return norm((long long)val+that.val); }
-  ModInt &operator-=(ModInt that) { return norm((long long)val-that.val); }
-  ModInt &operator*=(ModInt that) { val=(unsigned long long)val*that.val%MOD; return *this; }
-  ModInt &operator/=(ModInt that) { return *this*=that.inv(); }
-  ModInt operator+(ModInt that) const { return ModInt(*this)+=that; }
-  ModInt operator-(ModInt that) const { return ModInt(*this)-=that; }
-  ModInt operator*(ModInt that) const { return ModInt(*this)*=that; }
-  ModInt operator/(ModInt that) const { return ModInt(*this)/=that; }
-  ModInt pow(long long n) const {
-    ModInt x=*this, res=1;
-    while(n>0) {
-      if(n&1) res*=x;
-      x*=x,n>>=1;
-    }
-    return res;
-  }
-  ModInt inv() const { return (*this).pow(MOD-2); }
-  bool operator==(ModInt that) const { return val==that.val; }
-  bool operator!=(ModInt that) const { return val!=that.val; }
-  friend ostream& operator<<(ostream& os, const ModInt& that) { return os<<that.val; }
-};
-// $ cp-batch TwoArrays | diff TwoArrays.out -
-// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address TwoArrays.cpp && ./a.out
+
+// $ cp-batch WoArrays | diff WoArrays.out -
+// $ g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address WoArrays.cpp && ./a.out
 
 /*
- 
- 1/14/2020
- 
- 7:10-8:22 AC
- 
- https://codeforces.com/blog/entry/73105
- https://twitter.com/hanseilimak/status/1218455688038375424
- 
+
+ 9/27/2020
+
+ 8:14-9:02 WA
+ 9:47-9:56 AC
+
+ https://twitter.com/hanseilimak/status/1310453180635832320
+ https://codeforces.com/blog/entry/83036
+
  */
 
-const int MAX_N=1000+10,MAX_M=11;
-int N,M;
+const int MAX_N=1e6+1;
+LL A[MAX_N];
+int N,T;
 
-ModInt dp[MAX_M][MAX_N];
-ModInt cnta[MAX_N],cntb[MAX_N],cum[MAX_N];
 void solve() {
-  FORE(x,1,N) {
-    ZERO(dp);
-    dp[0][x]=1;
-    FORE(i,1,N) cum[i]=cum[i-1]+dp[0][i];
-    REP(i,M-1){
-      FORE(a,1,N) dp[i+1][a]=cum[a];
-      ZERO(cum);
-      FORE(j,1,N) cum[j]=cum[j-1]+dp[i+1][j];
-    }
-    cnta[x]=cum[N];
-//    FORE(i,1,N) cnta[x]+=dp[M-1][i];
-    ZERO(dp); ZERO(cum);
-    dp[0][x]=1;
-    for(int i=N; i>=1; --i) cum[i]=cum[i+1]+dp[0][i];
-//    REPE(i,N) cum[i+1]=cum[i]+dp[0][i];
-    REP(i,M-1){
-      FORE(b,1,N) {
-        dp[i+1][b]=cum[b];
-//        dump(x,i,b,cum[b]);
+  map<int,VI> ps;
+  REP(i,N) ps[A[i]].push_back(i);
+
+  VI res(N,-1);
+  FORR(kvp, ps) {
+    int a=kvp.first;
+    if(SZ(kvp.second)&&res[kvp.second.front()]!=-1) continue;
+
+    if(a+a==T) {
+      int M=SZ(kvp.second);
+      REP(i,M) {
+        res[kvp.second[i]]=i>=M/2;
       }
-      ZERO(cum);
-      for(int j=N; j>=1; --j) cum[j]=cum[j+1]+dp[i+1][j];
+    } else if(ps.count(T-a)) {
+      FORR(i,kvp.second) res[i]=0;
+      FORR(i,ps[T-a]) res[i]=1;
+    } else {
+      FORR(i,kvp.second) res[i]=0;
     }
-//    FORE(i,1,N) cntb[x]+=dp[M-1][i];
-    cntb[x]=cum[1];
-//     dump(x,cnta[x],cntb[x]);
   }
-  
-  vector<ModInt> cum(N+2);
-  REPE(i,N) cum[i+1]=cum[i]+cnta[i];
-  ModInt res=0;
-//  FORE(x,1,N) res+=cntb[x]*cum[x+1];
-  FORE(a,1,N)FORE(b,1,a) {
-//    dump(a,b,cnta[a],cntb[b]);
-    res+=cnta[a]*cntb[b];
+
+  REP(i,N) cout<<res[i]<<" ";
+  cout<<endl;
+}
+
+void solve_wrong() {
+  vector<II> as(N);
+  REP(i,N) as[i]={A[i],i};
+  sort(ALL(as));
+  VI res(N,0);
+  int l=0,r=N-1;
+  while(l<r) {
+    if(as[l].first+as[r].first<T) {
+      ++l;
+    } else if(as[l].first+as[r].first>T) {
+      res[as[r--].second]=1;
+    } else {
+      //dump(l,r);
+      res[as[r].second]=1;
+      --r,++l;
+    }
   }
-  cout<<res<<endl;
+  if(N>1&&N%2==1&&as[l].first+as[l-1].first==T&&as[l].first!=as[l-1].first) {
+    res[as[l].second]=1;
+  }
+  REP(i,N) cout<<res[i]<<" ";
+  cout<<endl;
 }
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(0);
   cout<<setprecision(12)<<fixed;
-  
-  cin>>N>>M;
-  solve();
-  
+
+  int t; cin>>t;
+  while(t--) {
+    cin>>N>>T;
+    REP(i,N) cin>>A[i];
+    solve();
+  }
+
   return 0;
 }
