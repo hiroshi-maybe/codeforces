@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 if [ "$1" = "" ]; then
   echo "Problem name is empty"
@@ -11,11 +11,11 @@ for arg; do
 	arg=`echo ${arg} | sed 's/[^a-zA-Z0-9]//g'` # filter alphanumeric
 	len=${#arg}
 	initial=`echo ${arg:0:1} | tr a-z A-Z`
-	rest=${arg:1:len-1}
+	rest=$(echo $arg | cut -c2-)
 	probname="$probname$initial$rest"
 done
 
-sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+sdir="$( cd "$( dirname "${(%):-%N}" )" >/dev/null && pwd )"
 pdir=$PWD
 
 temppath="${sdir}/../template-solver.cpp"

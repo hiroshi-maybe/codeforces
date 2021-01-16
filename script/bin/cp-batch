@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # ./batch.sh batch-sample | diff batch-sample.out -
 
