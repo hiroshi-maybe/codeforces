@@ -102,3 +102,8 @@ edition = "2018"
 
 # ある長さまでは要素を「直に」持つ可変長配列
 #smallvec = "=1.2.0"
+
+[[bin]]
+name = "a_variety_of_operations"
+path = "a_variety_of_operations.rs"
+
