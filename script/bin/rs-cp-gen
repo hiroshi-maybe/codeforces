@@ -1,0 +1,61 @@
+#!/bin/zsh
+
+if [ "$1" = "" ]; then
+  echo "Problem name is empty"
+  exit 1
+fi
+
+# convert command line args to snake case
+# "./gen this is a pen" -> "this_is_a_pen.*" (.rs, .in, .out)
+for arg; do
+	arg=`echo ${arg} | sed 's/[^a-zA-Z0-9]//g'` # filter alphanumeric
+	arg=`echo ${arg} | tr A-Z a-z` # replace upper case with lower case
+	probname="${probname}${arg}_"
+done
+
+probname=${probname:0:-1}
+
+sdir="$( cd "$( dirname "${(%):-%N}" )" >/dev/null && pwd )"
+pdir=$PWD
+
+temppath="${sdir}/../template-solver.rs"
+
+pfilepath="${pdir}/${probname}.rs"
+ifilepath="${pdir}/${probname}.in"
+ofilepath="${pdir}/${probname}.out"
+
+tomlfile="${pdir}/Cargo.toml"
+
+if [[ -f "${ifilepath}" ]]; then
+    echo "${probname} already exists." >&2
+	exit 1
+fi
+
+if [ ! -f "${tomlfile}" ]; then
+    echo "Cargo.toml not found!" >&2
+    exit 1
+fi
+
+`cp -n ${temppath} ${pfilepath}`
+touch "${ifilepath}"
+touch "${ofilepath}"
+
+# parameter insertion in the template
+sed -i '' -e "s/{\$__PROB__}/${probname}/g" ${pfilepath}
+curdate=`date +%-m/%-d/%Y`
+curtime=`date +%-H:%M`
+sed -i '' -e "s|{\$__DATE__}|${curdate}|g" ${pfilepath}
+sed -i '' -e "s|{\$__TIME__}|${curtime}|g" ${pfilepath}
+
+echo "[[bin]]" >> ${tomlfile}
+echo "name = \"${probname}\"" >> ${tomlfile}
+echo "path = \"${probname}.rs\"" >> ${tomlfile}
+echo "" >> ${tomlfile}
+
+# compile command for reference
+command="rs-cp-batch ${probname} | diff ${probname}.out -"
+echo $command
+
+# open generated files !!!!
+open "${pfilepath}"
+open "${ifilepath}" "${ofilepath}"
