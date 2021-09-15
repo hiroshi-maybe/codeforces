@@ -22,3 +22,7 @@ path = "src/proconio.rs"
 [[bin]]
 name = "watareader"
 path = "src/watareader.rs"
+
+[[bin]]
+name = "wataxxreader"
+path = "src/wataxxreader.rs"
