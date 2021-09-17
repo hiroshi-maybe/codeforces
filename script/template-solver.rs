@@ -1,30 +1,29 @@
-#[allow(unused_imports)]
+#![allow(unused_macros, unused_imports)]
 use std::cmp::*;
-#[allow(unused_imports)]
 use std::collections::*;
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 
 macro_rules! with_dollar_sign { ($($body:tt)*) => {
-    macro_rules! __with_dollar_sign { $($body)* }
-    __with_dollar_sign!($);
+	macro_rules! __with_dollar_sign { $($body)* }
+	__with_dollar_sign!($);
 }}
-macro_rules! setup_out { ($fn:ident,$fn_s:ident) => {
-    let out = std::io::stdout();
-    let mut out = BufWriter::new(out.lock());
-    with_dollar_sign! { ($d:tt) => {
-        #[allow(unused_macros)]
-        macro_rules! $fn { ($d($format:tt)*) => { let _ = write!(out,$d($format)*); } }
-        #[allow(unused_macros)]
-        macro_rules! $fn_s { ($d($format:tt)*) => { let _ = writeln!(out,$d($format)*); } }
-    }}
-};}
-// https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
+macro_rules! setup_out {
+	($fn:ident,$fn_s:ident) => {
+		let out = std::io::stdout();
+		let mut out = BufWriter::new(out.lock());
+		with_dollar_sign! { ($d:tt) => {
+			macro_rules! $fn { ($d($format:tt)*) => { let _ = write!(out,$d($format)*); } }
+			macro_rules! $fn_s { ($d($format:tt)*) => { let _ = writeln!(out,$d($format)*); } }
+		}}
+	};
+}
 pub fn readln() -> String {
 	let mut line = String::new();
-	::std::io::stdin().read_line(&mut line).unwrap_or_else(|e| panic!("{}", e));
+	::std::io::stdin()
+		.read_line(&mut line)
+		.unwrap_or_else(|e| panic!("{}", e));
 	line
 }
-#[allow(unused_macros)]
 macro_rules! readlns {
 	($($t:tt),*; $n:expr) => {{
 		let stdin = ::std::io::stdin();
@@ -36,7 +35,6 @@ macro_rules! readlns {
 		ret
 	}};
 }
-#[allow(unused_macros)]
 macro_rules! readln {
 	($($t:tt),*) => {{
 		let line = readln();
