@@ -2,7 +2,7 @@
 use std::cmp::*;
 #[allow(unused_imports)]
 use std::collections::*;
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 // https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
 macro_rules! input {
     ($($r:tt)*) => {
@@ -63,11 +63,11 @@ fn main() {
     }
 
     for (n, s) in ns {
-        let res=if n==1 {
+        let res = if n == 1 {
             s
         } else {
-            let nn=n/2+1;
-            s/nn
+            let nn = n / 2 + 1;
+            s / nn
         };
 
         puts!("{}\n", res);

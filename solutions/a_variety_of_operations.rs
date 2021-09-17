@@ -2,7 +2,7 @@
 use std::cmp::*;
 #[allow(unused_imports)]
 use std::collections::*;
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 // https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
 macro_rules! input {
     ($($r:tt)*) => {
@@ -60,11 +60,11 @@ fn main() {
         cd: [(i64, i64); n],
     }
     for (c, d) in cd {
-        let res = if c%2!=d%2 {
+        let res = if c % 2 != d % 2 {
             -1
-        } else if c==0&&d==0 {
+        } else if c == 0 && d == 0 {
             0
-        } else if c==d {
+        } else if c == d {
             1
         } else {
             2
@@ -72,5 +72,4 @@ fn main() {
 
         puts!("{}\n", res);
     }
-
 }

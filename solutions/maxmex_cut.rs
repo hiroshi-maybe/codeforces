@@ -2,7 +2,7 @@
 use std::cmp::*;
 #[allow(unused_imports)]
 use std::collections::*;
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 // https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
 macro_rules! input {
     ($($r:tt)*) => {
@@ -55,11 +55,11 @@ macro_rules! read_value {
 ///
 
 fn is01(mx: &Vec<Vec<char>>, i: usize) -> bool {
-    (mx[0][i]=='1'&&mx[1][i]=='0')||(mx[0][i]=='0'&&mx[1][i]=='1')
+    (mx[0][i] == '1' && mx[1][i] == '0') || (mx[0][i] == '0' && mx[1][i] == '1')
 }
 
 fn is_x(mx: &Vec<Vec<char>>, i: usize, c: char) -> bool {
-    mx[0][i]==c&&mx[1][i]==c
+    mx[0][i] == c && mx[1][i] == c
 }
 
 fn main() {
@@ -72,30 +72,28 @@ fn main() {
     }
 
     for (n, mx) in a {
-        let mut res=0;
-        let mut i=0;
+        let mut res = 0;
+        let mut i = 0;
 
         // let is01=|i: usize| (mx[0][i]=='1'&&mx[1][i]=='0')||(mx[0][i]=='0'&&mx[1][i]=='1');
         // let is_x=|i: usize, c:char| mx[0][i]==c&&mx[1][i]==c;
 
-        while i<n {
+        while i < n {
             if is01(&mx, i) {
-                res+=2;
-                i+=1;
-            } else if is_x(&mx,i,'0') && (i<n-1&&is_x(&mx,i+1,'1')) {
-                res+=2;
-                i+=2;
-            } else if is_x(&mx,i,'1') && (i<n-1&&is_x(&mx,i+1,'0')) {
-                res+=2;
-                i+=2;
+                res += 2;
+                i += 1;
+            } else if is_x(&mx, i, '0') && (i < n - 1 && is_x(&mx, i + 1, '1')) {
+                res += 2;
+                i += 2;
+            } else if is_x(&mx, i, '1') && (i < n - 1 && is_x(&mx, i + 1, '0')) {
+                res += 2;
+                i += 2;
             } else {
-                res+=if is_x(&mx,i,'1') { 0 } else { 1 };
-                i+=1;
+                res += if is_x(&mx, i, '1') { 0 } else { 1 };
+                i += 1;
             }
         }
 
         puts!("{}\n", res);
     }
-
-
 }

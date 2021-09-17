@@ -2,7 +2,7 @@
 use std::cmp::*;
 #[allow(unused_imports)]
 use std::collections::*;
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 // https://qiita.com/tanakh/items/0ba42c7ca36cd29d0ac8
 macro_rules! input {
     ($($r:tt)*) => {
@@ -63,13 +63,13 @@ fn main() {
     }
 
     for s in s {
-        let mut cnt=0;
+        let mut cnt = 0;
         for (i, c) in s.iter().enumerate() {
-            if *c=='0'&&(i==0||s[i-1]=='1') {
-                cnt+=1;
+            if *c == '0' && (i == 0 || s[i - 1] == '1') {
+                cnt += 1;
             }
         }
-        let res=min(cnt,2);
+        let res = min(cnt, 2);
         puts!("{}\n", res);
     }
 }
