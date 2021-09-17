@@ -1,0 +1,23 @@
+[package]
+name = "rs-writers"
+version = "0.1.0"
+authors = ["Hiroshi Kori <hiroshi.maybe@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "print"
+path = "src/print.rs"
+
+[[bin]]
+name = "bufwriter-inlined"
+path = "src/bufwriter-inlined.rs"
+
+[[bin]]
+name = "bufwriter"
+path = "src/bufwriter.rs"
+
+[[bin]]
+name = "bufwriter-inlined-macro"
+path = "src/bufwriter-inlined-macro.rs"
