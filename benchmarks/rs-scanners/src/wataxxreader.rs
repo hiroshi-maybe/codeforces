@@ -4,16 +4,9 @@ use std::collections::*;
 // String reader for testing
 macro_rules! readstr {
 	(source = $s:expr, $($t:tt),*; $n:expr) => {
-		$s.lines().take($n).map(|line| {
-			let mut it = line.split_whitespace();
-			_read!(it; $($t),*)
-		}).collect::<Vec<_>>()
+		$s.lines().take($n).map(|line| { let mut it = line.split_whitespace(); _read!(it; $($t),*) }).collect::<Vec<_>>()
 	};
-
-	(source = $s:expr, $($t:tt),*) => {{
-		let mut it = $s.split_whitespace();
-		_read!(it; $($t),*)
-	}};
+	(source = $s:expr, $($t:tt),*) => {{ let mut it = $s.split_whitespace(); _read!(it; $($t),*) }};
 }
 
 // https://atcoder.jp/contests/nikkei2019-2-final/submissions/8962004
@@ -22,7 +15,6 @@ pub fn readln() -> String {
 	::std::io::stdin().read_line(&mut line).unwrap_or_else(|e| panic!("{}", e));
 	line
 }
-
 #[allow(unused_macros)]
 macro_rules! readlns {
 	($($t:tt),*; $n:expr) => {{
@@ -39,33 +31,19 @@ macro_rules! readlns {
 macro_rules! readln {
 	($($t:tt),*) => {{
 		let line = readln();
-        #[allow(unused_mut)]
+		#[allow(unused_mut)]
 		let mut it = line.split_whitespace();
 		_read!(it; $($t),*)
 	}};
 }
 macro_rules! _read {
-	($it:ident; [char]) => {
-		_read!($it; String).chars().collect::<Vec<_>>()
-	};
-	($it:ident; [u8]) => {
-		Vec::from(_read!($it; String).into_bytes())
-	};
-	($it:ident; usize1) => {
-		$it.next().unwrap_or_else(|| panic!("input mismatch")).parse::<usize>().unwrap_or_else(|e| panic!("{}", e)) - 1
-	};
-	($it:ident; [usize1]) => {
-		$it.map(|s| s.parse::<usize>().unwrap_or_else(|e| panic!("{}", e)) - 1).collect::<Vec<_>>()
-	};
-	($it:ident; [$t:ty]) => {
-		$it.map(|s| s.parse::<$t>().unwrap_or_else(|e| panic!("{}", e))).collect::<Vec<_>>()
-	};
-	($it:ident; $t:ty) => {
-		$it.next().unwrap_or_else(|| panic!("input mismatch")).parse::<$t>().unwrap_or_else(|e| panic!("{}", e))
-	};
-	($it:ident; $($t:tt),+) => {
-		($(_read!($it; $t)),*)
-	};
+	($it:ident; [char]) => { _read!($it; String).chars().collect::<Vec<_>>() };
+	($it:ident; [u8]) => { Vec::from(_read!($it; String).into_bytes()) };
+	($it:ident; usize1) => { it.next().unwrap_or_else(|| panic!("input mismatch")).parse::<usize>().unwrap_or_else(|e| panic!("{}", e)) - 1 };
+	($it:ident; [usize1]) => { $it.map(|s| s.parse::<usize>().unwrap_or_else(|e| panic!("{}", e)) - 1).collect::<Vec<_>>() };
+	($it:ident; [$t:ty]) => { $it.map(|s| s.parse::<$t>().unwrap_or_else(|e| panic!("{}", e))).collect::<Vec<_>>() };
+	($it:ident; $t:ty) => { $it.next().unwrap_or_else(|| panic!("input mismatch")).parse::<$t>().unwrap_or_else(|e| panic!("{}", e)) };
+	($it:ident; $($t:tt),+) => { ($(_read!($it; $t)),*) };
 }
 
 // cargo build --bin wataxxreader --release
