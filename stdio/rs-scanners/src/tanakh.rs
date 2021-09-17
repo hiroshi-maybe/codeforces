@@ -41,7 +41,7 @@ macro_rules! read_value {
     ($next:expr, $t:ty) => ($next().parse::<$t>().expect("Parse error"));
 }
 
-// target/release/thinputread < ../1e6int.input  0.23s user 0.01s system 96% cpu 0.255 total
+// target/release/tanakh < ../1e6int.input  0.22s user 0.01s system 51% cpu 0.455 total
 fn main() {
     input! {
         n: usize,

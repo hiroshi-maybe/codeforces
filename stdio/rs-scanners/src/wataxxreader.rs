@@ -68,8 +68,8 @@ macro_rules! _read {
 	};
 }
 
-// cargo build --bin watareader --release
-// target/release/watareader < ../1e6int.input  0.04s user 0.01s system 18% cpu 0.302 total
+// cargo build --bin wataxxreader --release
+// target/release/wataxxreader < ../1e6int.input  0.05s user 0.01s system 94% cpu 0.061 total
 fn main() {
     let n = readln!(usize);
 	let a = readln!([i64]);

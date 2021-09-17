@@ -8,8 +8,8 @@ edition = "2018"
 proconio = { version = "=0.3.6", features = ["derive"] }
 
 [[bin]]
-name = "thinputread"
-path = "src/thinputread.rs"
+name = "tanakh"
+path = "src/tanakh.rs"
 
 [[bin]]
 name = "ebtechscanner"
