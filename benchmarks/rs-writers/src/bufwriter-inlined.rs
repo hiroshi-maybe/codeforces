@@ -1,4 +1,4 @@
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 
 // $ cargo build --release --bin bufwriter-inlined
 // $ time ./target/release/bufwriter-inlined &>/dev/null

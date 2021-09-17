@@ -3,9 +3,11 @@ use std::collections::*;
 
 // https://atcoder.jp/contests/nikkei2019-2-final/submissions/8962004
 pub fn readln() -> String {
-	let mut line = String::new();
-	::std::io::stdin().read_line(&mut line).unwrap_or_else(|e| panic!("{}", e));
-	line
+    let mut line = String::new();
+    ::std::io::stdin()
+        .read_line(&mut line)
+        .unwrap_or_else(|e| panic!("{}", e));
+    line
 }
 
 macro_rules! read {
@@ -53,7 +55,7 @@ macro_rules! _read {
 // target/release/watareader < ../1e6int.input  0.04s user 0.01s system 18% cpu 0.302 total
 fn main() {
     let n = read!(usize);
-	let a = read!([i64]);
+    let a = read!([i64]);
     // let (n, a) = read!(usize, [i64]);
 
     println!("{}, {}", n, a[100]);

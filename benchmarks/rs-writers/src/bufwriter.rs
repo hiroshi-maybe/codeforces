@@ -1,4 +1,4 @@
-use std::io::{Write, BufWriter};
+use std::io::{BufWriter, Write};
 
 macro_rules! puts {
 	($($format:tt)*) => {{

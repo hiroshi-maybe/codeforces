@@ -12,7 +12,11 @@ struct Scanner<R> {
 }
 impl<R: BufRead> Scanner<R> {
     fn new(reader: R) -> Self {
-        Self { reader, buf_str: vec![], buf_iter: "".split_whitespace() }
+        Self {
+            reader,
+            buf_str: vec![],
+            buf_iter: "".split_whitespace(),
+        }
     }
     fn token<T: str::FromStr>(&mut self) -> T {
         loop {
@@ -20,7 +24,9 @@ impl<R: BufRead> Scanner<R> {
                 return token.parse().ok().expect("Failed parse");
             }
             self.buf_str.clear();
-            self.reader.read_until(b'\n', &mut self.buf_str).expect("Failed read");
+            self.reader
+                .read_until(b'\n', &mut self.buf_str)
+                .expect("Failed read");
             self.buf_iter = unsafe {
                 let slice = str::from_utf8_unchecked(&self.buf_str);
                 std::mem::transmute(slice.split_whitespace())
