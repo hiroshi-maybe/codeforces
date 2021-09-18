@@ -8,21 +8,21 @@ macro_rules! with_dollar_sign { ($($body:tt)*) => {
 	__with_dollar_sign!($);
 }}
 macro_rules! setup_out {
-	($fn:ident,$fn_s:ident) => {
-		let out = std::io::stdout();
-		let mut out = BufWriter::new(out.lock());
-		with_dollar_sign! { ($d:tt) => {
-			macro_rules! $fn { ($d($format:tt)*) => { let _ = write!(out,$d($format)*); } }
-			macro_rules! $fn_s { ($d($format:tt)*) => { let _ = writeln!(out,$d($format)*); } }
-		}}
-	};
+    ($fn:ident,$fn_s:ident) => {
+        let out = std::io::stdout();
+        let mut out = BufWriter::new(out.lock());
+        with_dollar_sign! { ($d:tt) => {
+            macro_rules! $fn { ($d($format:tt)*) => { let _ = write!(out,$d($format)*); } }
+            macro_rules! $fn_s { ($d($format:tt)*) => { let _ = writeln!(out,$d($format)*); } }
+        }}
+    };
 }
 pub fn readln() -> String {
-	let mut line = String::new();
-	::std::io::stdin()
-		.read_line(&mut line)
-		.unwrap_or_else(|e| panic!("{}", e));
-	line
+    let mut line = String::new();
+    ::std::io::stdin()
+        .read_line(&mut line)
+        .unwrap_or_else(|e| panic!("{}", e));
+    line
 }
 macro_rules! readlns {
 	($($t:tt),*; $n:expr) => {{
@@ -54,7 +54,7 @@ macro_rules! _read {
 }
 
 // $ rs-cp-batch {$__PROB__} | diff {$__PROB__}.out -
-// $ cargo run {$__PROB__}
+// $ cargo run --bin {$__PROB__}
 
 ///
 /// {$__DATE__}
@@ -62,7 +62,7 @@ macro_rules! _read {
 /// {$__TIME__}-
 ///
 fn main() {
-    setup_out!(put,puts);
+    setup_out!(put, puts);
 
     let n = readln!(usize);
     let a = readln!([i64]);
