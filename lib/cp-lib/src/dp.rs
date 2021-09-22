@@ -10,25 +10,21 @@ pub trait SetMinMax {
     fn setmin<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
     fn setmax<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
 }
+#[rustfmt::skip]
 macro_rules! _set {
     ($self:ident, $cmp:tt, $other:ident) => {{
         let update = $other $cmp *$self;
-        if update {
-            *$self = $other;
-        }
+        if update { *$self = $other; }
         (update, $self)
     }};
 }
+#[rustfmt::skip]
 impl<T> SetMinMax for T
 where
     T: PartialOrd,
 {
-    fn setmin<'a>(&'a mut self, other: T) -> (bool, &'a Self) {
-        _set!(self, <, other)
-    }
-    fn setmax<'a>(&'a mut self, other: T) -> (bool, &'a Self) {
-        _set!(self, >, other)
-    }
+    fn setmin<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, <, other) }
+    fn setmax<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, >, other) }
 }
 
 #[cfg(test)]
