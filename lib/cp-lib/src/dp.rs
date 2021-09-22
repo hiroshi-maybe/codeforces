@@ -7,25 +7,27 @@ macro_rules! vvec {
 }
 
 pub trait SetMinMax {
-    fn setmin(&mut self, other: Self) -> bool;
-    fn setmax(&mut self, other: Self) -> bool;
+    fn setmin<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
+    fn setmax<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
 }
-
+macro_rules! _set {
+    ($self:ident, $cmp:tt, $other:ident) => {{
+        let update = $other $cmp *$self;
+        if update {
+            *$self = $other;
+        }
+        (update, $self)
+    }};
+}
 impl<T> SetMinMax for T
 where
     T: PartialOrd,
 {
-    fn setmin(&mut self, other: T) -> bool {
-        *self > other && {
-            *self = other;
-            true
-        }
+    fn setmin<'a>(&'a mut self, other: T) -> (bool, &'a Self) {
+        _set!(self, <, other)
     }
-    fn setmax(&mut self, other: T) -> bool {
-        *self < other && {
-            *self = other;
-            true
-        }
+    fn setmax<'a>(&'a mut self, other: T) -> (bool, &'a Self) {
+        _set!(self, >, other)
     }
 }
 
@@ -63,47 +65,55 @@ mod tests {
     fn test_setmin() {
         // larger
         let mut a = 10;
-        let res = a.setmin(11);
+        let (updated, min_value) = a.setmin(11);
 
+        // This throws an error because `min_value` should be dropped before access of `a`
+        // assert_eq!(a, 10);
+        assert_eq!(updated, false);
+        assert_eq!(*min_value, 10);
         assert_eq!(a, 10);
-        assert_eq!(res, false);
 
         // equal
         let mut a = 10;
-        let res = a.setmin(10);
+        let (updated, min_value) = a.setmin(10);
 
+        assert_eq!(updated, false);
+        assert_eq!(*min_value, 10);
         assert_eq!(a, 10);
-        assert_eq!(res, false);
 
         // smaller
         let mut a = 10;
-        let res = a.setmin(9);
+        let (updated, min_value) = a.setmin(9);
 
+        assert_eq!(updated, true);
+        assert_eq!(*min_value, 9);
         assert_eq!(a, 9);
-        assert_eq!(res, true);
     }
 
     #[test]
     fn test_setmax() {
         // larger
         let mut a = 10;
-        let res = a.setmax(11);
+        let (updated, max_value) = a.setmax(11);
 
+        assert_eq!(updated, true);
+        assert_eq!(*max_value, 11);
         assert_eq!(a, 11);
-        assert_eq!(res, true);
 
         // equal
         let mut a = 10;
-        let res = a.setmax(10);
+        let (updated, max_value) = a.setmax(10);
 
+        assert_eq!(updated, false);
+        assert_eq!(*max_value, 10);
         assert_eq!(a, 10);
-        assert_eq!(res, false);
 
         // smaller
         let mut a = 10;
-        let res = a.setmax(9);
+        let (updated, max_value) = a.setmax(9);
 
+        assert_eq!(updated, false);
+        assert_eq!(*max_value, 10);
         assert_eq!(a, 10);
-        assert_eq!(res, false);
     }
 }
