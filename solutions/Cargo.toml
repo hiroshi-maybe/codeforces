@@ -107,3 +107,22 @@ edition = "2018"
 name = "a_variety_of_operations"
 path = "a_variety_of_operations.rs"
 
+[[bin]]
+name = "median_maximization"
+path = "median_maximization.rs"
+
+[[bin]]
+name = "minmex_cut"
+path = "minmex_cut.rs"
+
+[[bin]]
+name = "maxmex_cut"
+path = "maxmex_cut.rs"
+
+[[bin]]
+name = "seating_arrangements"
+path = "seating_arrangements.rs"
+
+[[bin]]
+name = "take_a_guess"
+path = "take_a_guess.rs"
