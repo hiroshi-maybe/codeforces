@@ -6,7 +6,7 @@ use std::collections::*;
 
 #[rustfmt::skip]
 #[macro_use]
-#[allow(unused_mut)]
+#[allow(dead_code)]
 mod io {
     macro_rules! with_dollar_sign { ($($body:tt)*) => { macro_rules! __with_dollar_sign { $($body)* } __with_dollar_sign!($); }}
     macro_rules! setup_out {
@@ -20,6 +20,8 @@ mod io {
             }}
         };
     }
+    macro_rules! _epr { ($v:expr $(,)?) => {eprint!("{} = {:?}, ", stringify!($v), $v)}; }
+    macro_rules! dbgln { ($($val:expr),*) => {{ eprint!("[{}:{}] ", file!(), line!()); ($(_epr!($val)),*); eprintln!(); }}; }
     pub fn readln() -> String {
         let mut line = String::new();
         ::std::io::stdin().read_line(&mut line).unwrap_or_else(|e| panic!("{}", e));
@@ -28,14 +30,12 @@ mod io {
     macro_rules! readlns {
         ($($t:tt),*; $n:expr) => {{ let stdin = ::std::io::stdin();
             ::std::io::BufRead::lines(stdin.lock()).take($n).map(|line| {
-                let line = line.unwrap();
-                let mut it = line.split_whitespace();
-                _read!(it; $($t),*)
+                let line = line.unwrap(); #[allow(unused_mut)]let mut it = line.split_whitespace(); _read!(it; $($t),*)
             }).collect::<Vec<_>>()
         }};
     }
     macro_rules! readln {
-        ($($t:tt),*) => {{ let line = io::readln(); let mut it = line.split_whitespace(); _read!(it; $($t),*) }};
+        ($($t:tt),*) => {{ let line = io::readln(); #[allow(unused_mut)]let mut it = line.split_whitespace(); _read!(it; $($t),*) }};
     }
     macro_rules! _read {
         ($it:ident; [char]) => { _read!($it; String).chars().collect::<Vec<_>>() };
@@ -46,8 +46,6 @@ mod io {
         ($it:ident; $t:ty) => { $it.next().unwrap_or_else(|| panic!("input mismatch")).parse::<$t>().unwrap_or_else(|e| panic!("{}", e)) };
         ($it:ident; $($t:tt),+) => { ($(_read!($it; $t)),*) };
     }
-    macro_rules! _epr { ($v:expr $(,)?) => {eprint!("{} = {:?}, ", stringify!($v), $v)}; }
-    macro_rules! dbgln { ($($val:expr),*) => {{ eprint!("[{}:{}] ", file!(), line!()); ($(_epr!($val)),*); eprintln!(); }}; }
 }
 
 /********************** Template region end **********************/
