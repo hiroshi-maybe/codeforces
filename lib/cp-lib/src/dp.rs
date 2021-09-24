@@ -1,31 +1,33 @@
 #![allow(unused)]
 use std::collections::*;
 
-macro_rules! vvec {
-    ($v:expr; $n:expr) => { Vec::from(vec![$v; $n]) };
-    ($v:expr; $n:expr $(; $ns:expr)+) => { Vec::from(vec![vvec![$v $(; $ns)*]; $n]) };
-}
+/********************** Library region start **********************/
 
-pub trait SetMinMax {
-    fn setmin<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
-    fn setmax<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
-}
 #[rustfmt::skip]
-macro_rules! _set {
-    ($self:ident, $cmp:tt, $other:ident) => {{
-        let update = $other $cmp *$self;
-        if update { *$self = $other; }
-        (update, $self)
-    }};
+#[macro_use]
+#[allow(unused_mut, dead_code)]
+mod dp {
+    pub trait SetMinMax {
+        fn setmin<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
+        fn setmax<'a>(&'a mut self, other: Self) -> (bool, &'a Self);
+    }
+    macro_rules! _set { ($self:ident, $cmp:tt, $other:ident) => {{
+            let update = $other $cmp *$self;
+            if update { *$self = $other; }
+            (update, $self)
+    }}; }
+    impl<T> SetMinMax for T where T: PartialOrd {
+        fn setmin<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, <, other) }
+        fn setmax<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, >, other) }
+    }
+    macro_rules! vvec {
+        ($v:expr; $n:expr) => { Vec::from(vec![$v; $n]) };
+        ($v:expr; $n:expr $(; $ns:expr)+) => { Vec::from(vec![vvec![$v $(; $ns)*]; $n]) };
+    }
 }
-#[rustfmt::skip]
-impl<T> SetMinMax for T
-where
-    T: PartialOrd,
-{
-    fn setmin<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, <, other) }
-    fn setmax<'a>(&'a mut self, other: T) -> (bool, &'a Self) { _set!(self, >, other) }
-}
+use dp::*;
+
+/********************** Library region end **********************/
 
 #[cfg(test)]
 mod tests {
