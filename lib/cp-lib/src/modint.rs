@@ -1,7 +1,8 @@
+// region: mod_int
+
 #[rustfmt::skip]
 #[macro_use]
-#[allow(unused_mut)]
-mod mod_int {
+pub mod mod_int {
     use std::convert::TryFrom;
     use std::marker::PhantomData;
     use std::ops::*;
@@ -69,7 +70,7 @@ mod mod_int {
     macro_rules! define_modulus {
         ($struct_name: ident, $modulo: expr) => {
             #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-            struct $struct_name {}
+            pub struct $struct_name {}
             impl mod_int::Modulus for $struct_name { fn modulus() -> i64 { $modulo } }
         };
     }
@@ -78,15 +79,72 @@ mod mod_int {
             impl<M: Modulus> From<$integer> for ModInt<M> { fn from(v: $integer) -> ModInt<M> { ModInt::<M>::new(v as i64) } }
         };
     }
-    define_convert!(i32); define_convert!(i64); define_convert!(usize);
+    define_convert!(i32); define_convert!(u32); define_convert!(i64); define_convert!(u64); define_convert!(usize);
 }
 define_modulus!(Mod1000000007, 1_000_000_007);
 define_modulus!(Mod998244353, 998_244_353);
-type ModInt = mod_int::ModInt<Mod1000000007>;
+pub type ModInt1000000007 = mod_int::ModInt<Mod1000000007>;
+pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
+// type ModInt = ModInt1000000007;
+// endregion: mod_int
+
+// region: comb
+mod comb {
+    use super::mod_int::{ModInt, Modulus};
+
+    pub struct Com<T> {
+        fac: Vec<T>,
+        ifac: Vec<T>,
+    }
+
+    impl<M: Modulus> Com<ModInt<M>> {
+        pub fn new(n: usize) -> Com<ModInt<M>> {
+            let mut fac = vec![ModInt::<M>::from(1); n + 1];
+            let mut ifac = vec![ModInt::<M>::from(1); n + 1];
+            for i in 1..=n {
+                fac[i] = fac[i - 1] * i;
+            }
+            ifac[n] = ModInt::<M>::from(1) / fac[n];
+            for i in (1..=n - 1).rev() {
+                ifac[i] = ifac[(i + 1)] * i + 1;
+            }
+            Com { fac, ifac }
+        }
+
+        pub fn choose(&self, n: usize, k: usize) -> ModInt<M> {
+            if n < k {
+                return ModInt::<M>::from(0);
+            }
+            self.fac[n] * self.ifac[n - k] * self.ifac[k]
+        }
+
+        pub fn fact(&self, n: usize) -> ModInt<M> {
+            self.fac[n]
+        }
+
+        pub fn perm(&self, n: usize, k: usize) -> ModInt<M> {
+            if n < k {
+                return ModInt::<M>::from(0);
+            }
+            self.fac[n] * self.ifac[n - k]
+        }
+
+        pub fn multi_choose(&self, n: usize, k: usize) -> ModInt<M> {
+            if n == 0 && k == 0 {
+                return ModInt::<M>::from(1);
+            }
+            self.choose(n + k - 1, k)
+        }
+    }
+}
+use comb::*;
+// endregion: comb
 
 #[cfg(test)]
-mod tests {
+mod tests_modint {
     use super::*;
+
+    type ModInt = ModInt1000000007;
 
     #[test]
     fn test_from() {
