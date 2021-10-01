@@ -106,7 +106,7 @@ mod comb {
             }
             ifac[n] = ModInt::<M>::from(1) / fac[n];
             for i in (1..=n - 1).rev() {
-                ifac[i] = ifac[(i + 1)] * i + 1;
+                ifac[i] = ifac[(i + 1)] * (i + 1);
             }
             Com { fac, ifac }
         }
@@ -223,5 +223,94 @@ mod tests_modint {
 
         let a = -ModInt::from(0);
         assert_eq!(a.val(), 0);
+    }
+}
+
+#[cfg(test)]
+mod tests_comb {
+    use super::*;
+
+    type ModInt = ModInt1000000007;
+
+    #[test]
+    fn test_choose() {
+        let com = Com::<ModInt>::new(2_000_000);
+
+        assert_eq!(com.choose(4, 2).val(), 6);
+        assert_eq!(com.choose(1, 2).val(), 0);
+        assert_eq!(com.choose(50, 15).val(), 829559370);
+        assert_eq!(com.choose(2_000_000, 1).val(), 2_000_000);
+        assert_eq!(com.choose(2_000_000, 1_000_000).val(), 192151600);
+        assert_eq!(com.choose(1, 2_000_001).val(), 0);
+    }
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn test_choose_out_of_index() {
+        let com = Com::<ModInt>::new(2_000_000);
+        let _ = com.choose(2_000_001, 1);
+    }
+
+    #[test]
+    fn test_fact() {
+        let com = Com::<ModInt>::new(2_000_000);
+
+        assert_eq!(com.fact(0).val(), 1);
+        assert_eq!(com.fact(1).val(), 1);
+        assert_eq!(com.fact(2).val(), 2);
+        assert_eq!(com.fact(3).val(), 6);
+        assert_eq!(com.fact(10).val(), 3628800);
+        assert_eq!(com.fact(15).val(), 674358851);
+        assert_eq!(com.fact(20).val(), 146326063);
+        assert_eq!(com.fact(1_000_000).val(), 641102369);
+        assert_eq!(com.fact(2_000_000).val(), 578095319);
+    }
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn test_fact_out_of_index() {
+        let com = Com::<ModInt>::new(2_000_000);
+        let _ = com.fact(2_000_001);
+    }
+
+    #[test]
+    fn test_perm() {
+        let com = Com::<ModInt>::new(2_000_000);
+
+        assert_eq!(com.perm(4, 2).val(), 12);
+        assert_eq!(com.perm(1, 2).val(), 0);
+        assert_eq!(com.perm(50, 15).val(), 673538977);
+        assert_eq!(com.perm(2_000_000, 1).val(), 2_000_000);
+        assert_eq!(com.perm(2_000_000, 1_000_000).val(), 104818485);
+        assert_eq!(com.perm(1, 2_000_001).val(), 0);
+    }
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn test_perm_out_of_index() {
+        let com = Com::<ModInt>::new(2_000_000);
+        let _ = com.perm(2_000_001, 1);
+    }
+
+    #[test]
+    fn test_multi_choose() {
+        let com = Com::<ModInt>::new(2_000_000);
+
+        assert_eq!(com.multi_choose(0, 0).val(), 1);
+        assert_eq!(com.multi_choose(1, 0).val(), 1);
+        assert_eq!(com.multi_choose(0, 1).val(), 0);
+        assert_eq!(com.multi_choose(1, 1).val(), 1);
+        assert_eq!(com.multi_choose(1, 2).val(), 1);
+        assert_eq!(com.multi_choose(4, 2).val(), 10);
+        assert_eq!(com.multi_choose(50, 15).val(), 998746094);
+        assert_eq!(com.multi_choose(2_000_000, 1).val(), 2_000_000);
+        assert_eq!(com.multi_choose(1, 2_000_000).val(), 1);
+    }
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn test_multi_choose_out_of_index() {
+        let com = Com::<ModInt>::new(2_000_000);
+        let _ = com.multi_choose(2_000_000, 1_000_000);
     }
 }
