@@ -2,6 +2,7 @@
 
 #[rustfmt::skip]
 #[macro_use]
+#[allow(dead_code)]
 pub mod mod_int {
     use std::convert::TryFrom;
     use std::marker::PhantomData;
@@ -89,55 +90,37 @@ pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
 // endregion: mod_int
 
 // region: comb
-mod comb {
+
+#[rustfmt::skip]
+#[allow(dead_code)]
+pub mod comb {
     use super::mod_int::{ModInt, Modulus};
-
-    pub struct Com<T> {
-        fac: Vec<T>,
-        ifac: Vec<T>,
-    }
-
+    pub struct Com<T> { fac: Vec<T>, ifac: Vec<T> }
     impl<M: Modulus> Com<ModInt<M>> {
         pub fn new(n: usize) -> Com<ModInt<M>> {
             let mut fac = vec![ModInt::<M>::from(1); n + 1];
             let mut ifac = vec![ModInt::<M>::from(1); n + 1];
-            for i in 1..=n {
-                fac[i] = fac[i - 1] * i;
-            }
+            for i in 1..=n { fac[i] = fac[i - 1] * i; }
             ifac[n] = ModInt::<M>::from(1) / fac[n];
-            for i in (1..=n - 1).rev() {
-                ifac[i] = ifac[(i + 1)] * (i + 1);
-            }
+            for i in (1..=n - 1).rev() { ifac[i] = ifac[i + 1] * (i + 1); }
             Com { fac, ifac }
         }
-
         pub fn choose(&self, n: usize, k: usize) -> ModInt<M> {
-            if n < k {
-                return ModInt::<M>::from(0);
-            }
+            if n < k { return ModInt::<M>::from(0); }
             self.fac[n] * self.ifac[n - k] * self.ifac[k]
         }
-
-        pub fn fact(&self, n: usize) -> ModInt<M> {
-            self.fac[n]
-        }
-
+        pub fn fact(&self, n: usize) -> ModInt<M> { self.fac[n] }
         pub fn perm(&self, n: usize, k: usize) -> ModInt<M> {
-            if n < k {
-                return ModInt::<M>::from(0);
-            }
+            if n < k { return ModInt::<M>::from(0); }
             self.fac[n] * self.ifac[n - k]
         }
-
         pub fn multi_choose(&self, n: usize, k: usize) -> ModInt<M> {
-            if n == 0 && k == 0 {
-                return ModInt::<M>::from(1);
-            }
+            if n == 0 && k == 0 { return ModInt::<M>::from(1); }
             self.choose(n + k - 1, k)
         }
     }
 }
-use comb::*;
+use comb::Com;
 // endregion: comb
 
 #[cfg(test)]
