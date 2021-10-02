@@ -1,11 +1,11 @@
+async function copyToClipboard(str) {
+	try {
+    	await navigator.clipboard.writeText(str);
+	} catch (err) {
+    	alert('Failed to copy: ', err);
+	}
 
-function copyToClipboard(str) {
-	const el = document.createElement('textarea');
-	el.value = str;
-	document.body.appendChild(el);
-	el.select();
-	document.execCommand('copy');
-	document.body.removeChild(el);
+	return str;
 }
 
 function formatInputSamples(data) {
@@ -20,8 +20,12 @@ function formatOutputSamples(data) {
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	var es = document.querySelectorAll("div.sample-test ."+message+" pre");	
 	var data = Array.from(es).map(x => x.innerText);
-	data = message==="input"?formatInputSamples(data):formatOutputSamples(data);
-	console.log(data);
-	copyToClipboard(data);
-//	alert(message+" successfully copied!\n"+data);
+	const batchsample = message==="input"?formatInputSamples(data):formatOutputSamples(data);
+
+	(async () => {
+		const data = await copyToClipboard(batchsample);
+		console.log("Copied", data);
+		sendResponse(data);
+	})();
+	return true;
 });
