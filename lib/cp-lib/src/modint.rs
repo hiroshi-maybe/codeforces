@@ -9,7 +9,7 @@ pub mod mod_int {
     use std::ops::*;
     pub trait Modulus: Copy { fn modulus() -> i64; }
 
-    #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+    #[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
     pub struct ModInt<M> { val: u32, phantom: PhantomData<fn() -> M> }
     impl<M: Modulus> ModInt<M> {
         pub fn val(self) -> u32 { self.val }
@@ -68,6 +68,9 @@ pub mod mod_int {
     impl<M: Modulus> ::std::fmt::Display for ModInt<M> {
         fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result { self.val().fmt(f) }
     }
+    impl<M: Modulus> ::std::fmt::Debug for ModInt<M> {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result { self.val().fmt(f) }
+    }
     macro_rules! define_modulus {
         ($struct_name: ident, $modulo: expr) => {
             #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -86,6 +89,7 @@ define_modulus!(Mod1000000007, 1_000_000_007);
 define_modulus!(Mod998244353, 998_244_353);
 pub type ModInt1000000007 = mod_int::ModInt<Mod1000000007>;
 pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
+// type ModInt = ModInt998244353;
 // type ModInt = ModInt1000000007;
 // endregion: mod_int
 
@@ -206,6 +210,15 @@ mod tests_modint {
 
         let a = -ModInt::from(0);
         assert_eq!(a.val(), 0);
+    }
+
+    #[test]
+    fn test_fmt_debug() {
+        let a = ModInt::from(100);
+        assert_eq!(
+            format!("The debug display is {:?}", a),
+            "The debug display is 100"
+        );
     }
 }
 
