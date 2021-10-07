@@ -9,7 +9,7 @@ pub mod mod_int {
     use std::ops::*;
     pub trait Modulus: Copy { fn modulus() -> i64; }
 
-    #[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+    #[derive(Copy, Clone, Default, Hash, PartialEq, Eq, PartialOrd, Ord)]
     pub struct ModInt<M> { val: u32, phantom: PhantomData<fn() -> M> }
     impl<M: Modulus> ModInt<M> {
         pub fn val(self) -> u32 { self.val }
@@ -73,7 +73,7 @@ pub mod mod_int {
     }
     macro_rules! define_modulus {
         ($struct_name: ident, $modulo: expr) => {
-            #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+            #[derive(Copy, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
             pub struct $struct_name {}
             impl mod_int::Modulus for $struct_name { fn modulus() -> i64 { $modulo } }
         };
@@ -219,6 +219,12 @@ mod tests_modint {
             format!("The debug display is {:?}", a),
             "The debug display is 100"
         );
+    }
+
+    #[test]
+    fn test_default() {
+        let a = ModInt::default();
+        assert_eq!(a.val(), 0);
     }
 }
 
