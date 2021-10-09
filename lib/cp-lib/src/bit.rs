@@ -69,6 +69,29 @@ pub mod bit {
     }
     fn g(i: usize) -> usize { i & (i + 1) }
     fn h(i: usize) -> usize { i | (i + 1) }
+
+    pub fn compress<T: Ord + Clone>(a: Vec<T>) -> Vec<usize> {
+        let mut aa = a.clone();
+        aa.sort_unstable();
+        aa.dedup();
+        let mut res = vec![];
+        res.reserve(a.len());
+        for i in 0..a.len() {
+            res.push(aa.binary_search(&a[i]).unwrap());
+        }
+        res
+    }
+    pub fn inversions(a: &Vec<i32>) -> Vec<usize> {
+        let a = compress(a.clone());
+        let n = a.len();
+        let mut bit = BIT::new(n, 0usize);
+        let mut res = vec![0; n];
+        for i in (0..n).rev() {
+            res[i] = bit.query(..a[i]);
+            bit.add(a[i], 1);
+        }
+        res
+    }
 }
 pub use bit::BIT;
 
@@ -92,5 +115,13 @@ mod tests_modint {
         bit.add(3, 6);
         assert_eq!(bit.query_range(2..3), 1);
         assert_eq!(bit.query_range(0..4), 13);
+    }
+
+    #[test]
+    fn test_inversions() {
+        let a = vec![2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9];
+        let inversions = vec![2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        assert_eq!(bit::inversions(&a), inversions);
     }
 }
