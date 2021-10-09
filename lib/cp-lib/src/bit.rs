@@ -79,5 +79,18 @@ mod tests_modint {
     use super::*;
 
     #[test]
-    fn test() {}
+    fn test_bit() {
+        let a = vec![2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9];
+        let mut bit = BIT::new(a.len(), 0);
+        for i in 0..a.len() {
+            bit.add(i, a[i]);
+        }
+        assert_eq!(bit.query(..0), 0);
+        assert_eq!(bit.query(..3), 4);
+        assert_eq!(bit.query(..4), 7);
+
+        bit.add(3, 6);
+        assert_eq!(bit.query_range(2..3), 1);
+        assert_eq!(bit.query_range(0..4), 13);
+    }
 }
