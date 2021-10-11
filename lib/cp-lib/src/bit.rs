@@ -10,7 +10,14 @@
 /// # Examples
 ///
 /// ```
-/// // @TODO
+/// let a = vec![2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9];
+/// let mut bit = BIT::new(a.len(), 0);
+/// for i in 0..a.len() {
+///     bit.add(i, a[i]);
+/// }
+/// bit.add(3, 6);
+/// assert_eq!(bit.query_range(2..3), 1);
+/// assert_eq!(bit.query_range(0..4), 13);
 /// ```
 ///
 /// # References:
@@ -23,7 +30,8 @@
 ///
 /// # Used problems
 ///
-/// *
+/// * https://github.com/hiroshi-maybe/leetcode/blob/b80c649bd4dcc788f279f898e1a513f1cfa58366/775-global-and-local-inversions/global-and-local-inversions.rs#L9
+/// * https://github.com/hiroshi-maybe/atcoder/blob/34252573b731ba310d088e4b8b39d2d6457eced0/solutions/leq.rs#L141
 ///
 
 // region: bit
@@ -93,7 +101,7 @@ pub mod bit {
         res
     }
 }
-pub use bit::BIT;
+pub use bit::{compress, inversions, BIT};
 
 // endregion: bit
 
