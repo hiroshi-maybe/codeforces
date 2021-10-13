@@ -126,3 +126,15 @@ path = "seating_arrangements.rs"
 [[bin]]
 name = "take_a_guess"
 path = "take_a_guess.rs"
+[[bin]]
+name = "gamer_hemose"
+path = "gamer_hemose.rs"
+
+[[bin]]
+name = "hemose_shopping"
+path = "hemose_shopping.rs"
+
+[[bin]]
+name = "bakry_and_partitioning"
+path = "bakry_and_partitioning.rs"
+
