@@ -2,6 +2,7 @@
 use std::cmp::*;
 use std::collections::*;
 
+// region: io
 #[rustfmt::skip]
 #[macro_use]
 #[allow(dead_code)]
@@ -45,6 +46,7 @@ mod io {
 		($it:ident; $($t:tt),+) => { ($(_read!($it; $t)),*) };
 	}
 }
+// endregion: io
 
 // $ rs-cp-batch gardener_and_tree | diff gardener_and_tree.out -
 // $ cargo run --bin gardener_and_tree
