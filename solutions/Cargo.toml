@@ -138,3 +138,23 @@ path = "hemose_shopping.rs"
 name = "bakry_and_partitioning"
 path = "bakry_and_partitioning.rs"
 
+[[bin]]
+name = "elections"
+path = "elections.rs"
+
+[[bin]]
+name = "make_it_divisible_by_25"
+path = "make_it_divisible_by_25.rs"
+
+[[bin]]
+name = "save_more_mice"
+path = "save_more_mice.rs"
+
+[[bin]]
+name = "all_are_same"
+path = "all_are_same.rs"
+
+[[bin]]
+name = "gardener_and_tree"
+path = "gardener_and_tree.rs"
+

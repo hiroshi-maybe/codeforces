@@ -54,8 +54,100 @@ mod io {
 ///
 /// 9:09-9:28 WA
 /// 9:48 MLE Lol.
-/// 10:00 AC
+/// 10:14 AC
 ///
+/// 10/14/2021
+///
+/// Add simpler BFS solution
+///
+/// https://twitter.com/laycrs/status/1448330998245048320
+/// https://twitter.com/kzyKT_M/status/1448330955526230016
+///
+/// https://codeforces.com/contest/1593/submission/131784260
+///
+
+#[allow(dead_code)]
+fn solve_v0() -> usize {
+    let (n, k) = readln!(usize, usize);
+    let mut g = vec![vec![]; n];
+    let mut deg = vec![0usize; n];
+    for (u, v) in readlns!(usize1, usize1; n-1) {
+        g[u].push(v);
+        g[v].push(u);
+        deg[u] += 1;
+        deg[v] += 1;
+    }
+
+    let mut q = VecDeque::new();
+    for u in 0..n {
+        if deg[u] <= 1 {
+            q.push_back(u);
+        }
+    }
+
+    let mut viz = vec![false; n];
+    for _ in 0..k {
+        let mut l = q.len();
+        if l == 0 {
+            break;
+        }
+
+        while l > 0 {
+            l -= 1;
+            let u = q.pop_front().unwrap();
+            viz[u] = true;
+            for &v in &g[u] {
+                deg[v] -= 1;
+                if deg[v] == 1 {
+                    q.push_back(v);
+                }
+            }
+        }
+    }
+
+    let cnt = viz.iter().filter(|&&a| a).count();
+
+    n - cnt
+}
+
+fn solve_v1() -> usize {
+    const INF: usize = 100_000_000;
+    let (n, k) = readln!(usize, usize);
+    let mut g = vec![vec![]; n];
+    let mut deg = vec![0usize; n];
+    let mut dist = vec![INF; n];
+    for (u, v) in readlns!(usize1, usize1; n-1) {
+        g[u].push(v);
+        g[v].push(u);
+        deg[u] += 1;
+        deg[v] += 1;
+    }
+
+    let mut q = VecDeque::new();
+    for u in 0..n {
+        if deg[u] <= 1 {
+            dist[u] = 0;
+            q.push_back(u);
+        }
+    }
+
+    while let Some(u) = q.pop_front() {
+        //dbgln!(u, deg[u], dist[u]);
+        for &v in &g[u] {
+            //dbgln!(u, v, deg[v]);
+            if dist[v] != INF {
+                continue;
+            }
+            deg[v] -= 1;
+            if deg[v] <= 1 {
+                dist[v] = dist[u] + 1;
+                q.push_back(v);
+            }
+        }
+    }
+
+    dist.iter().filter(|&&d| d >= k).count()
+}
 
 fn main() {
     setup_out!(put, puts);
@@ -63,47 +155,8 @@ fn main() {
     let t = readln!(usize);
     for _ in 0..t {
         let _ = readln!([usize]);
-        let (n, k) = readln!(usize, usize);
-        let mut g = vec![vec![]; n];
-        let mut deg = vec![0; n];
-        for (u, v) in readlns!(usize1, usize1; n-1) {
-            g[u].push(v);
-            g[v].push(u);
-            deg[u] += 1;
-            deg[v] += 1;
-        }
 
-        if n == 1 {
-            puts!("0");
-            continue;
-        }
-
-        let mut q = VecDeque::new();
-        for u in 0..n {
-            if deg[u] == 1 {
-                q.push_back(u);
-            }
-        }
-
-        let mut viz = vec![false; n];
-        for _ in 0..k {
-            let mut l = q.len();
-            while l > 0 {
-                l -= 1;
-                let u = q.pop_front().unwrap();
-                deg[u] -= 1;
-                viz[u] = true;
-                for &v in &g[u] {
-                    deg[v] -= 1;
-                    if deg[v] == 1 {
-                        q.push_back(v);
-                    }
-                }
-            }
-        }
-        //dbgln!(cnt, n);
-        let cnt = viz.iter().filter(|&&a| a).count();
-
-        puts!("{}", n - cnt);
+        let res = solve_v1();
+        puts!("{}", res);
     }
 }
