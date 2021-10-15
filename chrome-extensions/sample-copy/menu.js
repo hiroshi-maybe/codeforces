@@ -5,7 +5,7 @@ async function copyinout(info, tab) {
 }
 // without delay >250(ms), second one is not copied to clipboard..
 async function delay(info, tab) {
-	return new Promise(r => setTimeout(r, 500));
+	return new Promise(r => setTimeout(r, 750));
 }
 async function copyinput(info, tab) {
 	await copy(info, tab, "input");
