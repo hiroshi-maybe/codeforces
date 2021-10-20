@@ -1,6 +1,4 @@
 pub mod bit;
-pub mod dp;
-pub mod io;
 pub mod modint;
 pub mod next_permutation;
 
