@@ -124,7 +124,7 @@ pub mod comb {
         }
     }
 }
-use comb::Com;
+pub use comb::Com;
 // endregion: comb
 
 #[cfg(test)]

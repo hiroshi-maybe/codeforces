@@ -10,6 +10,7 @@
 /// # Examples
 ///
 /// ```
+/// use cp_lib::BIT;
 /// let a = vec![2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9];
 /// let mut bit = BIT::new(a.len(), 0);
 /// for i in 0..a.len() {
