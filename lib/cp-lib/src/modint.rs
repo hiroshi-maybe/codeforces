@@ -1,7 +1,6 @@
 // region: mod_int
 
 #[rustfmt::skip]
-#[macro_use]
 #[allow(dead_code)]
 pub mod mod_int {
     use std::convert::TryFrom;
@@ -75,7 +74,7 @@ pub mod mod_int {
         ($struct_name: ident, $modulo: expr) => {
             #[derive(Copy, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
             pub struct $struct_name {}
-            impl mod_int::Modulus for $struct_name { fn modulus() -> i64 { $modulo } }
+            impl Modulus for $struct_name { fn modulus() -> i64 { $modulo } }
         };
     }
     macro_rules! define_convert {
@@ -84,13 +83,15 @@ pub mod mod_int {
         };
     }
     define_convert!(i32); define_convert!(u32); define_convert!(i64); define_convert!(u64); define_convert!(usize);
+    define_modulus!(Mod1000000007, 1_000_000_007); define_modulus!(Mod998244353, 998_244_353);
+    pub(crate) use define_modulus;
 }
-define_modulus!(Mod1000000007, 1_000_000_007);
-define_modulus!(Mod998244353, 998_244_353);
+pub use mod_int::*;
 pub type ModInt1000000007 = mod_int::ModInt<Mod1000000007>;
 pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
 // type ModInt = ModInt998244353;
 // type ModInt = ModInt1000000007;
+
 // endregion: mod_int
 
 // region: comb
