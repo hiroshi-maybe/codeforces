@@ -84,6 +84,8 @@ pub mod minmax {
 	}
 }
 pub mod vec {
+	pub trait CollectVec: Iterator { fn collect_vec(self) -> Vec<Self::Item> where Self: Sized { self.collect() } }
+	impl<T> CollectVec for T where T: Iterator {}
 	macro_rules! vvec {
 		($v:expr; $n:expr) => { Vec::from(vec![$v; $n]) };
 		($v:expr; $n:expr $(; $ns:expr)+) => { Vec::from(vec![vvec![$v $(; $ns)*]; $n]) };
