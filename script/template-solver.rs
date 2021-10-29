@@ -2,7 +2,7 @@
 use std::cmp::*;
 use std::collections::*;
 
-// $ rs-cp-batch {$__PROB__} | diff {$__PROB__}.out -
+// $ cp-batch {$__PROB__} | diff {$__PROB__}.out -
 // $ cargo run --bin {$__PROB__}
 
 ///

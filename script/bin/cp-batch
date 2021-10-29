@@ -15,9 +15,8 @@ if [ "$testcase" = "" ]; then
 fi
 
 pdir=$PWD
-pfilepath="${pdir}/${probname}.cpp"
 infilepath="${pdir}/${probname}.in"
-`g++ -std=c++14 -Wall -O2 -D_GLIBCXX_DEBUG -fsanitize=address ${pfilepath}`
+`cargo build --bin ${probname}`
 
 if [ $? -ne 0 ]; then
   exit 1
@@ -29,7 +28,7 @@ res=""
 while IFS='' read -r line || [[ -n "$line" ]]; do
   if [ "$line" = "~" ]; then
     if [ "$testcase" = -1 ] || [ "$t" = "$testcase" ]; then
-      echo "${body}" | ${pdir}/a.out
+      echo "${body}" | ${pdir}/target/debug/${probname}
     fi
     body=""
     t=$(( $t+1 ))
