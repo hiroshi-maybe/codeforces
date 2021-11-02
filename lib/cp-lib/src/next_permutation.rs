@@ -1,9 +1,38 @@
+///
+/// next_permutation
+/// =======
+///
+/// # Use cases
+///
+/// * Find next lexicographically larger sequence
+///
+/// # Examples
+///
+/// ```
+/// use cp_lib::next_permutation;
+/// let mut p = vec![1, 1, 0, 2];
+/// p.sort();
+///
+/// loop {
+///     println!("{:?}", p);
+///
+///     if !next_permutation(&mut p) {
+///         break;
+///     }
+/// }
+///
+/// ```
+///
+/// # Used problems:
+/// * https://github.com/hiroshi-maybe/atcoder/blob/66166d65b5c8b7069dd0b6170d6410555a75e35a/solutions/select_mul.rs#L51
+/// * https://github.com/hiroshi-maybe/atcoder/blob/4d9dae43eba33accb93600ee4981e78baf085766/solutions/abc_identity.rs#L34
+///
+
 // region: next_permutation
 #[rustfmt::skip]
 #[allow(dead_code)]
 pub fn next_permutation<T>(xs: &mut [T]) -> bool
-where
-    T: std::cmp::Ord,
+    where T: std::cmp::Ord
 {
     let asc_i = match xs.windows(2).rposition(|w| w[0] < w[1]) {
         Some(i) => i,

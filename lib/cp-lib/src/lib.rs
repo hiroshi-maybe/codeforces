@@ -4,3 +4,4 @@ pub mod next_permutation;
 
 pub use bit::BIT;
 pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
+pub use next_permutation::next_permutation;
