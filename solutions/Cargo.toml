@@ -158,3 +158,31 @@ path = "all_are_same.rs"
 name = "gardener_and_tree"
 path = "gardener_and_tree.rs"
 
+[[bin]]
+name = "ab_balance"
+path = "ab_balance.rs"
+
+[[bin]]
+name = "update_files"
+path = "update_files.rs"
+
+[[bin]]
+name = "banknotes"
+path = "banknotes.rs"
+
+[[bin]]
+name = "era"
+path = "era.rs"
+
+[[bin]]
+name = "xor_specialist"
+path = "xor_specialist.rs"
+
+[[bin]]
+name = "divisible_confusion"
+path = "divisible_confusion.rs"
+
+[[bin]]
+name = "moderate_modular_mode"
+path = "moderate_modular_mode.rs"
+
