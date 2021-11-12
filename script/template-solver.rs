@@ -11,13 +11,18 @@ use std::collections::*;
 /// {$__TIME__}-
 ///
 
-fn main() {
-    setup_out!(put, puts);
-
+fn solve() -> i64 {
     let n = readln!(usize);
     let a = readln!([i64]);
 
-    puts!("{}", n);
+	
+}
+
+fn main() {
+    setup_out!(put, puts);
+
+    let res = solve();
+    puts!("{}", res);
 }
 
 use crate::cplib::io::*;
