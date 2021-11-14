@@ -186,3 +186,35 @@ path = "divisible_confusion.rs"
 name = "moderate_modular_mode"
 path = "moderate_modular_mode.rs"
 
+[[bin]]
+name = "am_deviation"
+path = "am_deviation.rs"
+
+[[bin]]
+name = "reverse_sort"
+path = "reverse_sort.rs"
+
+[[bin]]
+name = "dominant_character"
+path = "dominant_character.rs"
+
+[[bin]]
+name = "treelabeling"
+path = "treelabeling.rs"
+
+[[bin]]
+name = "mathematical_addition"
+path = "mathematical_addition.rs"
+
+[[bin]]
+name = "coloring_rectangles"
+path = "coloring_rectangles.rs"
+
+[[bin]]
+name = "two_arrays"
+path = "two_arrays.rs"
+
+[[bin]]
+name = "guess_the_permutation"
+path = "guess_the_permutation.rs"
+
