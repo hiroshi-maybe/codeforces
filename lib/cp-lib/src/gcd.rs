@@ -63,25 +63,18 @@ mod tests_gcd {
 
     #[test]
     fn test_gcd() {
-        let g = gcd(2415, 3289);
-        assert_eq!(g, 23);
-
-        let g = gcd(406, 555);
-        assert_eq!(g, 1);
-
-        let g: i32 = gcd(-12, 36);
-        assert_eq!(g.abs(), 12);
+        assert_eq!(gcd(2415, 3289), 23);
+        assert_eq!(gcd(406, 555), 1);
+        assert_eq!(gcd(-12 as i32, 36).abs(), 12);
+        assert_eq!(gcd(899 as usize, 493), 29);
+        assert_eq!(gcd(15646365345434_i64, 64364363463464), 2);
     }
 
     #[test]
     fn test_lcm() {
-        let l = lcm(4278, 8602);
-        assert_eq!(l, 799986);
-
-        let l = lcm(10, 9);
-        assert_eq!(l, 90);
-
-        let l: i32 = lcm(-12, 36);
-        assert_eq!(l.abs(), 36);
+        assert_eq!(lcm(4278, 8602), 799986);
+        assert_eq!(lcm(10, 9), 90);
+        assert_eq!(lcm(-12 as i32, 36).abs(), 36);
+        assert_eq!(lcm(943349532_i64, 156464), 36900060293712);
     }
 }
