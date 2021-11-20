@@ -1,3 +1,29 @@
+///
+/// GCD libraries
+/// =======
+///
+/// # Use cases
+///
+/// * Compute gcd(a, b) or lcm(a, b)
+///   * Result may be negative if given numbers are negative
+///
+/// # Examples
+///
+/// ```
+/// use cp_lib::{gcd, lcm};
+///
+/// let g = gcd(2415, 3289);
+/// assert_eq!(g, 23);
+///
+/// let l = lcm(4278, 8602);
+/// assert_eq!(l, 799986);
+/// ```
+///
+/// # References:
+///
+/// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/gcd.cpp
+///
+
 // region: gcd
 
 #[rustfmt::skip]
