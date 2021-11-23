@@ -218,3 +218,19 @@ path = "two_arrays.rs"
 name = "guess_the_permutation"
 path = "guess_the_permutation.rs"
 
+[[bin]]
+name = "anti_lights_cell_guessing"
+path = "anti_lights_cell_guessing.rs"
+
+[[bin]]
+name = "kalindrome_array"
+path = "kalindrome_array.rs"
+
+[[bin]]
+name = "keshi_is_throwing_a_party"
+path = "keshi_is_throwing_a_party.rs"
+
+[[bin]]
+name = "not_quite_lee"
+path = "not_quite_lee.rs"
+
