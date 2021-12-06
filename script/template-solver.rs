@@ -15,7 +15,7 @@ fn solve() -> i64 {
     let n = readln!(usize);
     let a = readln!([i64]);
 
-	
+	unreachable!()
 }
 
 fn main() {
