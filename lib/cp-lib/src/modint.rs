@@ -1,3 +1,28 @@
+///
+/// ModInt
+/// =======
+///
+/// # Examples
+///
+/// ```
+/// use cp_lib::{ModInt1000000007, Com};
+/// type ModInt = ModInt1000000007;
+/// let mut a = ModInt::from(1) + 100;
+///
+/// assert_eq!(a.val(), 101);
+///
+/// let com = Com::<ModInt>::new(2_000_000);
+/// assert_eq!(com.choose(4, 2).val(), 6);
+/// assert_eq!(com.choose(1, 2).val(), 0);
+/// assert_eq!(com.choose(50, 15).val(), 829559370);
+/// ```
+///
+/// # References:
+///
+/// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/modint.cpp
+/// * https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/modint.rs
+///
+
 // region: mod_int
 
 #[rustfmt::skip]
