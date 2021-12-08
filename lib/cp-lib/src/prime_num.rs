@@ -62,6 +62,73 @@ pub use sieve::*;
 
 // endregion: sieve
 
+///
+/// Integer Factorization
+/// =======
+///
+/// # Use cases
+///
+/// * Divisor enumeration, O(√n) time
+///   * Enumerate divisors with trial division
+///   * Result is sorted
+///
+/// # Examples
+///
+/// ```
+/// use cp_lib::Divisors;
+///
+/// assert_eq!(12_i64.divisors(), vec![1,2,3,4,6,12]);
+/// ```
+///
+/// # Note
+///
+/// * size of divisors is upper-bounded by HCN(n)
+/// * Highly Composite Number: http://wwwhomes.uni-bielefeld.de/achim/highly.txt
+/// * HCN(10^9)≈1440, HCN(10^6)≈256
+///   * HCN(10^1) = 4 (6)
+///   * HCN(10^2) = 12 (60)
+///   * HCN(10^3) = 32 (840)
+///   * HCN(10^4) = 64 (7560)
+///   * HCN(10^5) = 128 (83160)
+///   * HCN(10^6) = 240 (720720)
+///   * HCN(10^7) = 448 (8648640)
+///   * HCN(10^8) = 768 (73513440)
+///   * HCN(10^9) = 1344 (735134400)
+///   * HCN(10^12) = 6720 (963761198400)
+///   * HCN(10^15) = 26880 (8.664213e+014)
+///
+/// # References:
+/// 
+/// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/divisor.cpp
+/// * https://cp-algorithms.com/algebra/factorization.html
+///
+
+// region: int_fact
+
+#[rustfmt::skip]
+#[allow(dead_code)]
+mod int_fact {
+    pub trait Divisors where Self: Sized { fn divisors(&self) -> Vec<Self>; }
+    macro_rules! impl_int_fact { ($integer:ty) => {
+        impl Divisors for $integer {
+            fn divisors(&self) -> Vec<Self> {
+                let n = *self; let mut res = vec![];
+                for d in (1..).take_while(|&d| d * d <= n).filter(|&d| n % d == 0) {
+                    res.push(d);
+                    let dd = n / d;
+                    if d != dd { res.push(dd); }
+                }
+                res.sort_unstable();
+                res
+            }
+        }
+    }; }
+    impl_int_fact!(i64); impl_int_fact!(i32); impl_int_fact!(usize);
+}
+pub use int_fact::*;
+
+// endregion: int_fact
+
 #[cfg(test)]
 mod tests_sieve {
     use super::*;
@@ -73,5 +140,22 @@ mod tests_sieve {
         assert_eq!(sieve.fact(0), vec![]);
         assert_eq!(sieve.fact(1), vec![]);
         assert_eq!(sieve.fact(2), vec![2]);
+    }
+}
+
+#[cfg(test)]
+mod tests_int_fact {
+    use super::*;
+
+    #[test]
+    fn test_divisors() {
+        assert_eq!(
+            120.divisors(),
+            vec![1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 30, 40, 60, 120]
+        );
+        assert_eq!(1.divisors(), vec![1]);
+
+        assert_eq!(0.divisors(), vec![]);
+        assert_eq!((-1).divisors(), vec![]);
     }
 }

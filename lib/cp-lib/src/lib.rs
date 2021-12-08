@@ -11,5 +11,5 @@ pub use gcd::{gcd, lcm};
 pub use grid_graph::GridGraph;
 pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
 pub use next_permutation::next_permutation;
-pub use prime_num::LinearSieve;
+pub use prime_num::{Divisors, LinearSieve};
 pub use union_find::UnionFind;
