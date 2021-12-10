@@ -29,6 +29,7 @@
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/7feab571939e2e743356c32469aea228ba7730ac/solutions/linear_probing.rs#L21
+/// * https://github.com/hiroshi-maybe/atcoder/blob/8a6b4a1328db02190a19174c0ba4323e0479e36c/solutions/reversible_cards.rs#L23
 ///
 
 // region: union_find
@@ -65,6 +66,9 @@ mod uf {
             self.par[c] = p;
             p
         }
+        pub fn roots(&mut self) -> Vec<usize> {
+            (0..self.par.len()).filter(|&u| self.find(u) == u).collect::<Vec<_>>()
+        }
     }
 }
 pub use uf::UnionFind;
@@ -96,5 +100,8 @@ mod tests_uf {
         assert_eq!(uf.same_set(4, 6), true);
         assert_eq!(uf.same_set(7, 8), true);
         assert_eq!(uf.group_count, 4);
+        for root in uf.roots() {
+            assert_eq!(uf.find(root), root);
+        }
     }
 }
