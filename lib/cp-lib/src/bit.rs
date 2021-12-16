@@ -79,19 +79,19 @@ pub mod bit {
     fn g(i: usize) -> usize { i & (i + 1) }
     fn h(i: usize) -> usize { i | (i + 1) }
 
-    pub fn compress<T: Ord + Clone>(a: Vec<T>) -> Vec<usize> {
-        let mut aa = a.clone();
+    pub fn compress<T: Ord + Copy>(a: &Vec<T>) -> Vec<usize> {
+        let mut aa = a.iter().enumerate().map(|(i, v)| (v, i)).collect::<Vec<_>>();
         aa.sort_unstable();
-        aa.dedup();
-        let mut res = vec![];
-        res.reserve(a.len());
-        for i in 0..a.len() {
-            res.push(aa.binary_search(&a[i]).unwrap());
+        let (n, mut k) = (a.len(), 0);
+        let mut res = vec![0; n];
+        for i in 0..n {
+            if i > 0 && aa[i - 1].0 < aa[i].0 { k += 1; }
+            res[aa[i].1] = k;
         }
         res
     }
     pub fn inversions(a: &Vec<i32>) -> Vec<usize> {
-        let a = compress(a.clone());
+        let a = compress(&a);
         let n = a.len();
         let mut bit = BIT::new(n, 0usize);
         let mut res = vec![0; n];
