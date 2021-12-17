@@ -30,6 +30,7 @@
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/7feab571939e2e743356c32469aea228ba7730ac/solutions/linear_probing.rs#L21
 /// * https://github.com/hiroshi-maybe/atcoder/blob/8a6b4a1328db02190a19174c0ba4323e0479e36c/solutions/reversible_cards.rs#L23
+/// * https://github.com/hiroshi-maybe/atcoder/blob/780d25af84fd7cc0e5f21dfe8f407d787d11e0bc/solutions/sum_of_maximum_weights.rs#L20
 ///
 
 // region: union_find
@@ -39,35 +40,33 @@
 mod uf {
     pub struct UnionFind {
         pub group_count: usize,
-        par: Vec<usize>, sizes: Vec<usize>,
+        par_or_size: Vec<isize>,
     }
     impl UnionFind {
         pub fn new(n: usize) -> UnionFind {
-            let par = (0..n).map(|i| i).collect::<Vec<_>>();
-            UnionFind { group_count: n, par, sizes: vec![1; n], }
+            UnionFind { group_count: n, par_or_size: vec![-1; n], }
         }
-        pub fn find(&mut self, x: usize) -> usize {
-            if self.par[x] == x { x } else {
-                self.par[x] = self.find(self.par[x]);
-                self.par[x]
+        pub fn root(&mut self, x: usize) -> usize {
+            if self.par_or_size[x] < 0 as isize { x } else {
+                self.par_or_size[x] = self.root(self.par_or_size[x] as usize) as isize;
+                self.par_or_size[x] as usize
             }
         }
-        pub fn same_set(&mut self, x: usize, y: usize) -> bool { self.find(x) == self.find(y) }
+        pub fn same_set(&mut self, x: usize, y: usize) -> bool { self.root(x) == self.root(y) }
         pub fn size(&mut self, x: usize) -> usize {
-            let x = self.find(x);
-            self.sizes[x]
+            let root = self.root(x); -self.par_or_size[root] as usize
         }
         pub fn merge(&mut self, x: usize, y: usize) -> usize {
-            let (mut p, mut c) = (self.find(x), self.find(y));
+            let (mut p, mut c) = (self.root(x), self.root(y));
             if p == c { return p; }
-            if self.sizes[p] < self.sizes[c] { std::mem::swap(&mut p, &mut c); }
+            if -self.par_or_size[p] < -self.par_or_size[c] { std::mem::swap(&mut p, &mut c); }
             self.group_count -= 1;
-            self.sizes[p] += self.sizes[c];
-            self.par[c] = p;
+            self.par_or_size[p] += self.par_or_size[c];
+            self.par_or_size[c] = p as isize;
             p
         }
         pub fn roots(&mut self) -> Vec<usize> {
-            (0..self.par.len()).filter(|&u| self.find(u) == u).collect::<Vec<_>>()
+            (0..self.par_or_size.len()).filter(|&u| self.root(u) == u).collect::<Vec<_>>()
         }
     }
 }
@@ -101,7 +100,7 @@ mod tests_uf {
         assert_eq!(uf.same_set(7, 8), true);
         assert_eq!(uf.group_count, 4);
         for root in uf.roots() {
-            assert_eq!(uf.find(root), root);
+            assert_eq!(uf.root(root), root);
         }
     }
 }
