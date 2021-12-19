@@ -30,6 +30,7 @@
 /// # Used problems
 ///
 /// * https://github.com/hiroshi-maybe/atcoder/blob/ab94707b57bc09e7083104d63d3dc49854e10002/solutions/coprime.rs#L54
+/// * https://github.com/hiroshi-maybe/atcoder/blob/293d4122fb0cd64ba613e5a543da9156d8d68648/solutions/factors_of_factorial.rs#L116
 ///
 
 // region: sieve
@@ -98,7 +99,7 @@ pub use sieve::*;
 ///   * HCN(10^15) = 26880 (8.664213e+014)
 ///
 /// # References:
-/// 
+///
 /// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/divisor.cpp
 /// * https://cp-algorithms.com/algebra/factorization.html
 ///
