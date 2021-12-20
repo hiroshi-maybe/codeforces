@@ -65,44 +65,25 @@ mod permutation {
         }
     }
     pub struct Permutation<'a, T> {
-        dat: &'a [T],
-        map: Vec<usize>,
-        cnt: i64,
+        next_perm: Option<Vec<&'a T>>,
     }
     impl<'a, T: std::cmp::Ord> Permutation<'a, T> {
         fn new(dat: &'a [T]) -> Permutation<'a, T> {
-            Permutation { dat, map: (0..dat.len()).collect::<Vec<_>>(), cnt: 0 }
-        }
-        fn get_ith(&self, i: usize) -> &'a T {
-            &self.dat[self.map[i]]
+            Permutation { next_perm: Some(dat.iter().map(|x| x).collect::<Vec<_>>()) }
         }
     }
 
     impl<'a, T: std::cmp::Ord> Iterator for Permutation<'a, T> {
         type Item = Vec<&'a T>;
-
         fn next(&mut self) -> Option<Self::Item> {
-            let n = self.dat.len();
-            let res = (0..n).map(|i| self.get_ith(i)).collect::<Vec<_>>();
-            if self.cnt < 0 { return None; }
-            if n == 0 {
-                if self.cnt == 0 { self.cnt=-1; return Some(res); }
-            }
-
-            if let Some(asc_i) = (0..n - 1).rposition(|i0| self.get_ith(i0) < self.get_ith(i0 + 1)) {
-                let min_larger_offset = (asc_i + 1..n).map(|i| self.get_ith(i)).collect::<Vec<_>>()
-                    .binary_search_by(|x| match self.get_ith(asc_i).cmp(x) {
-                        std::cmp::Ordering::Equal => std::cmp::Ordering::Greater,
-                        ord => ord,
-                    })
-                    .unwrap_err();
-                self.map.swap(asc_i, asc_i + min_larger_offset);
-                self.map[asc_i + 1..].reverse();
-                self.cnt += 1;
+            if let Some(perm) = &mut self.next_perm {
+                let res = perm.clone();
+                if !next_permutation(perm) {
+                    self.next_perm = None;
+                }
                 Some(res)
             } else {
-                self.cnt = -1;
-                Some(res)
+                None
             }
         }
     }
