@@ -264,6 +264,9 @@ mod tests_comb {
     fn test_choose() {
         let com = Com::<ModInt>::new(2_000_000);
 
+        assert_eq!(com.choose(0, 0).val(), 1);
+        assert_eq!(com.choose(1, 0).val(), 1);
+        assert_eq!(com.choose(0, 1).val(), 0);
         assert_eq!(com.choose(4, 2).val(), 6);
         assert_eq!(com.choose(1, 2).val(), 0);
         assert_eq!(com.choose(50, 15).val(), 829559370);
