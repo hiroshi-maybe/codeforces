@@ -19,7 +19,7 @@
 /// assert_eq!(uf.same_set(1, 3), true);
 /// assert_eq!(uf.size(1), 2);
 /// assert_eq!(uf.size(3), 2);
-/// assert_eq!(uf.find(1), uf.find(3));
+/// assert_eq!(uf.root(1), uf.root(3));
 /// ```
 ///
 /// # References:
