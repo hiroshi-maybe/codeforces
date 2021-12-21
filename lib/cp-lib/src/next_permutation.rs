@@ -13,24 +13,20 @@
 /// let mut p = vec![1, 1, 0, 2];
 /// p.sort();
 ///
-/// loop {
+/// for p in p {
 ///     println!("{:?}", p);
-///
-///     if !next_permutation(&mut p) {
-///         break;
-///     }
 /// }
-///
-///
 /// ```
 ///
 /// # References:
+/// * https://docs.rs/itertools/0.8.2/itertools/structs/struct.Permutations.html
 /// * https://aloso.github.io/2021/03/09/creating-an-iterator
 ///   * for iterator implementation
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/66166d65b5c8b7069dd0b6170d6410555a75e35a/solutions/select_mul.rs#L51
 /// * https://github.com/hiroshi-maybe/atcoder/blob/4d9dae43eba33accb93600ee4981e78baf085766/solutions/abc_identity.rs#L34
+/// * https://github.com/hiroshi-maybe/atcoder/blob/60db2f281e48cef51ca834eb0e1d12c14d89bf7c/solutions/graph_isomorphism.rs#L20
 ///
 
 // region: next_permutation
@@ -38,9 +34,7 @@
 #[rustfmt::skip]
 #[allow(dead_code)]
 mod permutation {
-    pub fn next_permutation<T>(xs: &mut [T]) -> bool
-        where T: std::cmp::Ord
-    {
+    pub fn next_permutation<T>(xs: &mut [T]) -> bool where T: std::cmp::Ord {
         let asc_i = match xs.windows(2).rposition(|w| w[0] < w[1]) {
             Some(i) => i,
             None => { return false; }
@@ -55,18 +49,11 @@ mod permutation {
         xs[asc_i + 1..].reverse();
         true
     }
-
-    pub trait Permutations<T> {
-        fn next_permutations(&self) -> Permutation<'_, T> where Self: Sized;
-    }
+    pub trait Permutations<T> { fn permutations(&self) -> Permutation<'_, T> where Self: Sized; }
     impl<T> Permutations<T> for Vec<T> where T: std::cmp::Ord {
-        fn next_permutations(&self) -> Permutation<'_, T> {
-            Permutation::new(&self[..])
-        }
+        fn permutations(&self) -> Permutation<'_, T> { Permutation::new(&self[..]) }
     }
-    pub struct Permutation<'a, T> {
-        next_perm: Option<Vec<&'a T>>,
-    }
+    pub struct Permutation<'a, T> { next_perm: Option<Vec<&'a T>>, }
     impl<'a, T: std::cmp::Ord> Permutation<'a, T> {
         fn new(dat: &'a [T]) -> Permutation<'a, T> {
             Permutation { next_perm: Some(dat.iter().map(|x| x).collect::<Vec<_>>()) }
@@ -78,9 +65,7 @@ mod permutation {
         fn next(&mut self) -> Option<Self::Item> {
             if let Some(perm) = &mut self.next_perm {
                 let res = perm.clone();
-                if !next_permutation(perm) {
-                    self.next_perm = None;
-                }
+                if !next_permutation(perm) { self.next_perm = None; }
                 Some(res)
             } else {
                 None
@@ -88,8 +73,7 @@ mod permutation {
         }
     }
 }
-pub use permutation::next_permutation;
-pub use permutation::Permutations;
+pub use permutation::{next_permutation, Permutations};
 
 // endregion: next_permutation
 
@@ -98,7 +82,7 @@ mod tests_comb {
     use super::*;
 
     fn assert_next_permutation(xs: &mut Vec<i32>, expected: Vec<Vec<i32>>) {
-        let mut it = xs.next_permutations();
+        let mut it = xs.permutations();
         let mut i = 0;
         while let Some(ys) = it.next() {
             for j in 0..xs.len() {
@@ -116,7 +100,7 @@ mod tests_comb {
     #[test]
     fn test_next_permutation_empty() {
         let mut xs: Vec<i32> = vec![];
-        let mut it = xs.next_permutations();
+        let mut it = xs.permutations();
         assert_eq!(it.next(), Some(vec![]));
         assert_eq!(it.next(), None);
         assert_eq!(next_permutation(&mut xs), false);
@@ -125,7 +109,7 @@ mod tests_comb {
     #[test]
     fn test_next_permutation_one() {
         let mut xs = vec![1];
-        let mut it = xs.next_permutations();
+        let mut it = xs.permutations();
         assert_eq!(it.next(), Some(vec![&xs[0]]));
         assert_eq!(it.next(), None);
         assert_eq!(next_permutation(&mut xs), false);
