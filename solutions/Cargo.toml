@@ -234,3 +234,15 @@ path = "keshi_is_throwing_a_party.rs"
 name = "not_quite_lee"
 path = "not_quite_lee.rs"
 
+[[bin]]
+name = "closing_the_gap"
+path = "closing_the_gap.rs"
+
+[[bin]]
+name = "and_its_nonzero"
+path = "and_its_nonzero.rs"
+
+[[bin]]
+name = "menorah"
+path = "menorah.rs"
+
