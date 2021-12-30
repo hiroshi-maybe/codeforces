@@ -246,3 +246,19 @@ path = "and_its_nonzero.rs"
 name = "menorah"
 path = "menorah.rs"
 
+[[bin]]
+name = "integer_diversity"
+path = "integer_diversity.rs"
+
+[[bin]]
+name = "mirror_in_the_string"
+path = "mirror_in_the_string.rs"
+
+[[bin]]
+name = "representative_edges"
+path = "representative_edges.rs"
+
+[[bin]]
+name = "keep_the_average_high"
+path = "keep_the_average_high.rs"
+
