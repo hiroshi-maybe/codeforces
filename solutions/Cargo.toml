@@ -33,7 +33,7 @@ edition = "2018"
 #libm = "=0.2.1"
 
 # 乱数
-#rand = { version = "=0.7.3", features = ["small_rng"] }
+rand = { version = "=0.7.3", features = ["small_rng"] }
 #getrandom = "=0.1.14"
 #rand_chacha = "=0.2.2"
 #rand_core = "=0.5.1"
@@ -261,4 +261,16 @@ path = "representative_edges.rs"
 [[bin]]
 name = "keep_the_average_high"
 path = "keep_the_average_high.rs"
+
+[[bin]]
+name = "stable_arrangement_of_rooks"
+path = "stable_arrangement_of_rooks.rs"
+
+[[bin]]
+name = "integers_shop"
+path = "integers_shop.rs"
+
+[[bin]]
+name = "hidden_permutations"
+path = "hidden_permutations.rs"
 
