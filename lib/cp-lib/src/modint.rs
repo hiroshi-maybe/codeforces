@@ -120,7 +120,6 @@ pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
 // endregion: mod_int
 
 // region: comb
-
 #[rustfmt::skip]
 #[allow(dead_code)]
 pub mod comb {
@@ -138,6 +137,10 @@ pub mod comb {
         pub fn choose(&self, n: usize, k: usize) -> ModInt<M> {
             if n < k { return ModInt::<M>::from(0); }
             self.fac[n] * self.ifac[n - k] * self.ifac[k]
+        }
+        pub fn choose_large_n(&self, n: i64, k: usize) -> ModInt<M> {
+            if n < k as i64 { return ModInt::<M>::from(0); }
+            (n - k as i64 + 1..=n).fold(self.ifac[k], |acc, k| acc * k)
         }
         pub fn fact(&self, n: usize) -> ModInt<M> { self.fac[n] }
         pub fn perm(&self, n: usize, k: usize) -> ModInt<M> {
@@ -273,6 +276,16 @@ mod tests_comb {
         assert_eq!(com.choose(2_000_000, 1).val(), 2_000_000);
         assert_eq!(com.choose(2_000_000, 1_000_000).val(), 192151600);
         assert_eq!(com.choose(1, 2_000_001).val(), 0);
+    }
+
+    #[test]
+    fn test_choose_large_n() {
+        let com = Com::<ModInt>::new(2_000_000);
+
+        assert_eq!(
+            com.choose_large_n(1_000_000_000, 3),
+            ModInt::from(1_000_000_000) * (1_000_000_000 - 1) * (1_000_000_000 - 2) / (3 * 2 * 1)
+        );
     }
 
     #[test]
