@@ -32,6 +32,7 @@
 /// * https://github.com/hiroshi-maybe/atcoder/blob/8a6b4a1328db02190a19174c0ba4323e0479e36c/solutions/reversible_cards.rs#L23
 /// * https://github.com/hiroshi-maybe/atcoder/blob/780d25af84fd7cc0e5f21dfe8f407d787d11e0bc/solutions/sum_of_maximum_weights.rs#L20
 /// * https://github.com/hiroshi-maybe/atcoder/blob/bbbe96fc9d1a6a21449889e61f6acd209a7215b0/solutions/destruction.rs#L16
+/// * https://github.com/hiroshi-maybe/atcoder/blob/f852d84f195ed184a5a544452b19b9c660e70f6d/solutions/bridge.rs#L39
 ///
 
 // region: union_find
