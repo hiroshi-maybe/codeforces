@@ -274,3 +274,19 @@ path = "integers_shop.rs"
 name = "hidden_permutations"
 path = "hidden_permutations.rs"
 
+[[bin]]
+name = "equidistant_letters"
+path = "equidistant_letters.rs"
+
+[[bin]]
+name = "minor_reduction"
+path = "minor_reduction.rs"
+
+[[bin]]
+name = "monsters_and_spells"
+path = "monsters_and_spells.rs"
+
+[[bin]]
+name = "martial_arts_tournament"
+path = "martial_arts_tournament.rs"
+
