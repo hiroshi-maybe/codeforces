@@ -35,6 +35,22 @@ mod partition {
         fn _partition_point<P>(&self, pred: P) -> usize
         where
             P: FnMut(&Self::Item) -> bool;
+
+        /// Find the smallest index which satisfies key <= a[i]
+        fn lower_bound(&self, key: &Self::Item) -> usize
+        where
+            Self::Item: Ord,
+        {
+            self._partition_point(|item| item < key)
+        }
+
+        /// Find the smallest index which satisfies key < a[i]
+        fn upper_bound(&self, key: &Self::Item) -> usize
+        where
+            Self::Item: Ord,
+        {
+            self._partition_point(|item| item <= key)
+        }
     }
 
     impl<T> PartitionSlice for [T] {
@@ -77,5 +93,34 @@ mod tests_partition {
         let a = vec![5, 3, 1, 3, 100, 4];
         assert_eq!(a._partition_point(|&x| x % 2 == 1), 4);
         assert_eq!(a._partition_point(|&x| x % 2 == 0), 0);
+    }
+
+    #[test]
+    fn test_lower_bound() {
+        let a = vec![1, 2, 3, 3, 4, 4, 5, 100];
+
+        assert_eq!(a.lower_bound(&0), 0);
+        assert_eq!(a.lower_bound(&1), 0);
+        assert_eq!(a.lower_bound(&2), 1);
+        assert_eq!(a.lower_bound(&3), 2);
+        assert_eq!(a.lower_bound(&4), 4);
+        assert_eq!(a.lower_bound(&5), 6);
+        assert_eq!(a.lower_bound(&6), 7);
+        assert_eq!(a.lower_bound(&10), 7);
+        assert_eq!(a.lower_bound(&99), 7);
+        assert_eq!(a.lower_bound(&100), 7);
+        assert_eq!(a.lower_bound(&101), 8);
+
+        assert_eq!(a.upper_bound(&0), 0);
+        assert_eq!(a.upper_bound(&1), 1);
+        assert_eq!(a.upper_bound(&2), 2);
+        assert_eq!(a.upper_bound(&3), 4);
+        assert_eq!(a.upper_bound(&4), 6);
+        assert_eq!(a.upper_bound(&5), 7);
+        assert_eq!(a.upper_bound(&6), 7);
+        assert_eq!(a.upper_bound(&10), 7);
+        assert_eq!(a.upper_bound(&99), 7);
+        assert_eq!(a.upper_bound(&100), 8);
+        assert_eq!(a.upper_bound(&101), 8);
     }
 }
