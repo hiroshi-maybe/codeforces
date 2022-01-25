@@ -9,6 +9,12 @@
 /// # Examples
 ///
 /// ```
+/// use cp_lib::PartitionSlice;
+///
+/// let a = vec![1, 2, 3, 3, 4, 4, 5, 100];
+///
+/// assert_eq!(a.lower_bound(&3), 2);
+/// assert_eq!(a.upper_bound(&3), 4);
 /// ```
 ///
 /// # References:
@@ -23,7 +29,7 @@
 
 // region: partition
 
-// #[rustfmt::skip]
+#[rustfmt::skip]
 #[allow(dead_code)]
 mod partition {
     use std::cmp::Ordering;
@@ -32,41 +38,24 @@ mod partition {
         /// Find the partition point for which left segment satisifies the predicate
         /// items = [true, true, true, false, false]
         ///                            ^ res
-        fn _partition_point<P>(&self, pred: P) -> usize
-        where
-            P: FnMut(&Self::Item) -> bool;
+        fn _partition_point<P>(&self, pred: P) -> usize where P: FnMut(&Self::Item) -> bool;
 
         /// Find the smallest index which satisfies key <= a[i]
-        fn lower_bound(&self, key: &Self::Item) -> usize
-        where
-            Self::Item: Ord,
-        {
+        fn lower_bound(&self, key: &Self::Item) -> usize where Self::Item: Ord {
             self._partition_point(|item| item < key)
         }
 
         /// Find the smallest index which satisfies key < a[i]
-        fn upper_bound(&self, key: &Self::Item) -> usize
-        where
-            Self::Item: Ord,
-        {
+        fn upper_bound(&self, key: &Self::Item) -> usize where Self::Item: Ord {
             self._partition_point(|item| item <= key)
         }
     }
 
     impl<T> PartitionSlice for [T] {
         type Item = T;
-        fn _partition_point<P>(&self, mut pred: P) -> usize
-        where
-            P: FnMut(&T) -> bool,
-        {
-            self.binary_search_by(|x| {
-                if pred(x) {
-                    Ordering::Less
-                } else {
-                    Ordering::Greater
-                }
-            })
-            .unwrap_or_else(std::convert::identity)
+        fn _partition_point<P>(&self, mut pred: P) -> usize where P: FnMut(&T) -> bool {
+            self.binary_search_by(|x| { if pred(x) { Ordering::Less } else { Ordering::Greater }})
+                .unwrap_or_else(std::convert::identity)
         }
     }
 }
