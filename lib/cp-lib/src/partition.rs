@@ -24,11 +24,10 @@
 ///
 ///
 /// # Used problems:
-/// *
+/// * https://github.com/hiroshi-maybe/atcoder/blob/6c4b1146bd51e97a531ca9e45ddfba66210db778/solutions/dividing_subsequence.rs#L57
 ///
 
 // region: partition
-
 #[rustfmt::skip]
 #[allow(dead_code)]
 mod partition {
@@ -60,7 +59,6 @@ mod partition {
     }
 }
 pub use partition::PartitionSlice;
-
 // endregion: partition
 
 #[cfg(test)]
@@ -99,6 +97,11 @@ mod tests_partition {
         assert_eq!(a.lower_bound(&99), 7);
         assert_eq!(a.lower_bound(&100), 7);
         assert_eq!(a.lower_bound(&101), 8);
+    }
+
+    #[test]
+    fn test_upper_bound() {
+        let a = vec![1, 2, 3, 3, 4, 4, 5, 100];
 
         assert_eq!(a.upper_bound(&0), 0);
         assert_eq!(a.upper_bound(&1), 1);
