@@ -35,8 +35,8 @@ mod partition {
     pub trait PartitionSlice {
         type Item;
         /// Find the partition point for which left segment satisifies the predicate
-        /// items = [true, true, true, false, false]
-        ///                            ^ res
+        /// [pred(item)] = [true, true, true, false, false]
+        ///                                   ^ res
         fn _partition_point<P>(&self, pred: P) -> usize where P: FnMut(&Self::Item) -> bool;
 
         /// Find the smallest index which satisfies key <= a[i]
