@@ -290,3 +290,19 @@ path = "monsters_and_spells.rs"
 name = "martial_arts_tournament"
 path = "martial_arts_tournament.rs"
 
+[[bin]]
+name = "min_max_swap"
+path = "min_max_swap.rs"
+
+[[bin]]
+name = "fun_with_even_subarrays"
+path = "fun_with_even_subarrays.rs"
+
+[[bin]]
+name = "and_matching"
+path = "and_matching.rs"
+
+[[bin]]
+name = "range_and_partition"
+path = "range_and_partition.rs"
+
