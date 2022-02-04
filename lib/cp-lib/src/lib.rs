@@ -1,4 +1,5 @@
 pub mod bit;
+pub mod bitmask;
 pub mod gcd;
 pub mod graph;
 pub mod grid_graph;
@@ -9,6 +10,7 @@ pub mod prime_num;
 pub mod union_find;
 
 pub use bit::BIT;
+pub use bitmask::{BitMask, BitSet};
 pub use gcd::{gcd, lcm};
 pub use graph::has_cyclic;
 pub use grid_graph::GridGraph;
