@@ -306,3 +306,19 @@ path = "and_matching.rs"
 name = "range_and_partition"
 path = "range_and_partition.rs"
 
+[[bin]]
+name = "reverse_and_concatenate"
+path = "reverse_and_concatenate.rs"
+
+[[bin]]
+name = "fortune_telling"
+path = "fortune_telling.rs"
+
+[[bin]]
+name = "okea"
+path = "okea.rs"
+
+[[bin]]
+name = "finding_zero"
+path = "finding_zero.rs"
+
