@@ -31,6 +31,7 @@
 ///
 /// * https://github.com/hiroshi-maybe/atcoder/blob/ab94707b57bc09e7083104d63d3dc49854e10002/solutions/coprime.rs#L54
 /// * https://github.com/hiroshi-maybe/atcoder/blob/293d4122fb0cd64ba613e5a543da9156d8d68648/solutions/factors_of_factorial.rs#L116
+/// * https://github.com/hiroshi-maybe/atcoder/blob/4a67f474a7af2837c4f14826e006e11307a14165/solutions/prime_sum_game.rs#L36
 ///
 
 // region: sieve
@@ -56,6 +57,10 @@ mod sieve {
             while x > 1 { res.push(self.divp[x]); x /= self.divp[x]; }
             res.sort_unstable();
             res
+        }
+        pub fn is_prime(&self, n: usize) -> bool {
+            if n >= self.n { panic!("argument exceeds sieve table size") }
+            n != 0 && self.divp[n] == n
         }
     }
 }
@@ -141,6 +146,18 @@ mod tests_sieve {
         assert_eq!(sieve.fact(0), vec![]);
         assert_eq!(sieve.fact(1), vec![]);
         assert_eq!(sieve.fact(2), vec![2]);
+    }
+
+    #[test]
+    fn test_is_prime() {
+        let sieve = LinearSieve::new(1_000_000);
+        assert_eq!(sieve.is_prime(0), false);
+        assert_eq!(sieve.is_prime(1), false);
+        assert_eq!(sieve.is_prime(2), true);
+        assert_eq!(sieve.is_prime(3), true);
+        assert_eq!(sieve.is_prime(4), false);
+        assert_eq!(sieve.is_prime(5), true);
+        assert_eq!(sieve.is_prime(6), false);
     }
 }
 
