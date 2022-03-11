@@ -95,6 +95,18 @@ pub mod mod_int {
     impl<M: Modulus> ::std::fmt::Debug for ModInt<M> {
         fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result { self.val().fmt(f) }
     }
+    impl<M: Modulus> ::std::iter::Sum for ModInt<M> {
+        fn sum<I: Iterator<Item=Self>>(iter: I) -> Self { iter.fold(ModInt::from(0), |a, b| a + b) }
+    }
+    impl<'a, M: Modulus> ::std::iter::Sum<&'a ModInt<M>> for ModInt<M> {
+        fn sum<I: Iterator<Item=&'a Self>>(iter: I) -> Self { iter.fold(ModInt::from(0), |a, b| a + *b) }
+    }
+    impl<M: Modulus> ::std::iter::Product for ModInt<M> {
+        fn product<I: Iterator<Item=Self>>(iter: I) -> Self { iter.fold(ModInt::from(1), |a, b| a * b) }
+    }
+    impl<'a, M: Modulus> ::std::iter::Product<&'a ModInt<M>> for ModInt<M> {
+        fn product<I: Iterator<Item=&'a Self>>(iter: I) -> Self { iter.fold(ModInt::from(1), |a, b| a * *b) }
+    }
     macro_rules! define_modulus {
         ($struct_name: ident, $modulo: expr) => {
             #[derive(Copy, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -254,6 +266,28 @@ mod tests_modint {
     fn test_default() {
         let a = ModInt::default();
         assert_eq!(a.val(), 0);
+    }
+
+    #[test]
+    fn test_sum() {
+        let a = [
+            ModInt::from(1),
+            ModInt::from(2),
+            ModInt::from(3),
+            ModInt::from(1000000006),
+        ];
+        assert_eq!(a.iter().sum::<ModInt>(), ModInt::from(5));
+    }
+
+    #[test]
+    fn test_product() {
+        let a = [
+            ModInt::from(1),
+            ModInt::from(2),
+            ModInt::from(3),
+            ModInt::from(1000000006),
+        ];
+        assert_eq!(a.iter().product::<ModInt>(), ModInt::from(1000000001));
     }
 }
 
