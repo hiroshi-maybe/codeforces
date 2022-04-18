@@ -1,6 +1,7 @@
 pub mod bit;
 pub mod bitmask;
 pub mod gcd;
+pub mod geometry;
 pub mod graph;
 pub mod grid_graph;
 pub mod modint;
@@ -12,6 +13,7 @@ pub mod union_find;
 pub use bit::BIT;
 pub use bitmask::{BitMask, BitSet};
 pub use gcd::{gcd, lcm};
+pub use geometry::Point;
 pub use graph::has_cyclic;
 pub use grid_graph::GridGraph;
 pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
