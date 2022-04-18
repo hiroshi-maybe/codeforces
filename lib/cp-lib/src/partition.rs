@@ -25,6 +25,7 @@
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/6c4b1146bd51e97a531ca9e45ddfba66210db778/solutions/dividing_subsequence.rs#L57
+/// * https://github.com/hiroshi-maybe/atcoder/blob/468d40b0ac51be98667ec2d2ad5578c23831fd7d/solutions/range_count_query.rs#L45
 ///
 
 // region: partition
