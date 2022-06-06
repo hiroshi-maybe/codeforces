@@ -8,6 +8,7 @@ pub mod modint;
 pub mod next_permutation;
 pub mod partition;
 pub mod prime_num;
+pub mod segtree;
 pub mod union_find;
 
 pub use bit::BIT;
@@ -20,4 +21,5 @@ pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
 pub use next_permutation::{next_permutation, Permutations};
 pub use partition::PartitionSlice;
 pub use prime_num::{Divisors, LinearSieve};
+pub use segtree::{Monoid, RangeMaxQuery, RangeMinQuery, SegmentTree};
 pub use union_find::UnionFind;
