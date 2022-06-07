@@ -26,6 +26,7 @@
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/leetcode/blob/master/307-Range-Sum-Query/range-sum-query-mutable.rs#L36
+/// * https://github.com/hiroshi-maybe/atcoder/blob/f634dc91bb9d3cea7df11b803fcb6af8ef296482/solutions/rectangle_gcd.rs#L87
 ///
 
 // region: segment_tree
