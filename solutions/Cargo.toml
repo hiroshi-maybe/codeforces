@@ -322,3 +322,19 @@ path = "okea.rs"
 name = "finding_zero"
 path = "finding_zero.rs"
 
+[[bin]]
+name = "parkway_walk"
+path = "parkway_walk.rs"
+
+[[bin]]
+name = "promo"
+path = "promo.rs"
+
+[[bin]]
+name = "awoo_s_favorite_problem"
+path = "awoo_s_favorite_problem.rs"
+
+[[bin]]
+name = "guess_the_string"
+path = "guess_the_string.rs"
+
