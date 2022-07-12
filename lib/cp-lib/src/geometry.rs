@@ -55,12 +55,16 @@
 /// # References:
 ///
 /// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/geometry.cpp
+/// * https://qiita.com/tydesign/items/7cb4d189451095b4d667
+///   * for circle intersection
 ///
 /// # Used problems:
 ///
 /// * https://github.com/hiroshi-maybe/atcoder/blob/6eb6fe23b63b17409b0b20b205ac5ec8586876e4/solutions/kcolinear_line.rs#L19
 /// * https://github.com/hiroshi-maybe/atcoder/blob/8b76c86b81d85047419d048fe7aa3f6628531451/solutions/counterclockwise_rotation.rs#L30
 ///   * 2D rotation
+/// * https://github.com/hiroshi-maybe/atcoder/blob/6d455dc8e6163b38be71c0aa9df99e93b6d13ec9/solutions/circumferences.rs#L58
+///   * Circle intersection
 ///
 
 // region: geometry
@@ -87,6 +91,11 @@ pub mod geometry {
     }
     impl<T> From<(T, T)> for Point<T> {
         fn from(t: (T, T)) -> Point<T> { Point::<T>::new(t.0, t.1) }
+    }
+    impl<T: Mul<Output = T> + Add<Output = T> + PartialOrd + Copy> Point<T> {
+        pub fn dist(&self) -> T {
+            self.x * self.x + self.y * self.y
+        }
     }
     impl<U: Into<Point<T>>, T: Add<Output = T>> Add<U> for Point<T> {
         type Output = Self;
@@ -125,8 +134,28 @@ pub mod geometry {
             (self.x-other.x).abs() <= EPS && (self.y-other.y).abs() <= EPS
         }
     }
+
+    pub struct Circle<T> { pub origin: Point<T>, pub radius: T }
+    impl<T> Circle<T> {
+        pub fn new<U: Into<Point<T>>>(point: U, radius: T) -> Circle<T> {
+            Circle { origin: point.into(), radius }
+        }
+    }
+    impl<T: Sub<Output = T> + Mul<Output = T> + Add<Output = T> + PartialOrd + Copy> Circle<T> {
+        pub fn is_on_arc(&self, point: Point<T>) -> bool {
+            (point - self.origin).dist() == self.radius * self.radius
+        }
+        pub fn is_inside(&self, point: Point<T>) -> bool {
+            (point - self.origin).dist() <= self.radius * self.radius
+        }
+        pub fn has_intersection(&self, other: &Circle<T>) -> bool {
+            let d = (self.origin - other.origin).dist();
+            (self.radius - other.radius) * (self.radius - other.radius) <= d
+            && d <= (self.radius + other.radius) * (self.radius + other.radius)
+        }
+    }
 }
-pub use geometry::Point;
+pub use geometry::{Circle, Point};
 
 // endregion: geometry
 
@@ -246,5 +275,21 @@ mod tests_geometry {
         assert!(p
             .rotate(120.0)
             .equal_with_eps(&Point::new(-2.49999999999999911182, 4.33012701892219364908)));
+    }
+
+    #[test]
+    fn test_circle_inside() {
+        let c = Circle::new((2, 0), 2);
+        assert!(c.is_inside(Point::new(1, 1)));
+    }
+
+    #[test]
+    fn test_circle_intersection() {
+        let c1 = Circle::new((0, 0), 2);
+        let c2 = Circle::new((3, 0), 2);
+        assert!(c1.has_intersection(&c2));
+
+        let c3 = Circle::new((3, 3), 1);
+        assert!(c2.has_intersection(&c3));
     }
 }

@@ -14,7 +14,7 @@ pub mod union_find;
 pub use bit::BIT;
 pub use bitmask::{BitMask, BitSet};
 pub use gcd::{gcd, lcm};
-pub use geometry::Point;
+pub use geometry::{Circle, Point};
 pub use graph::has_cyclic;
 pub use grid_graph::GridGraph;
 pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
