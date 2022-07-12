@@ -57,8 +57,10 @@
 /// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/geometry.cpp
 ///
 /// # Used problems:
-/// 
+///
 /// * https://github.com/hiroshi-maybe/atcoder/blob/6eb6fe23b63b17409b0b20b205ac5ec8586876e4/solutions/kcolinear_line.rs#L19
+/// * https://github.com/hiroshi-maybe/atcoder/blob/8b76c86b81d85047419d048fe7aa3f6628531451/solutions/counterclockwise_rotation.rs#L30
+///   * 2D rotation
 ///
 
 // region: geometry
@@ -105,6 +107,23 @@ pub mod geometry {
     }
     impl<U: Into<Point<T>>, T: Sub<Output = T> + Copy> SubAssign<U> for Point<T> {
         fn sub_assign(&mut self, other: U) { *self = *self - other; }
+    }
+
+    pub fn deg2rad(deg: f64) -> f64 { deg * std::f64::consts::PI / 180.0 }
+    impl<T: Into<f64> + Copy> Point<T> {
+        pub fn rotate(&self, degree: f64) -> Point<f64> {
+            let rad = deg2rad(degree);
+            let (c, s) = (rad.cos(), rad.sin());
+            let (x, y) = (self.x.into(), self.y.into());
+            Point::<f64>::new(x * c - y * s, x * s + y * c)
+        }
+    }
+
+    const EPS: f64 = 1e-6;
+    impl Point<f64> {
+        pub fn equal_with_eps(&self, other: &Self) -> bool {
+            (self.x-other.x).abs() <= EPS && (self.y-other.y).abs() <= EPS
+        }
     }
 }
 pub use geometry::Point;
@@ -218,6 +237,14 @@ mod tests_geometry {
         assert_eq!(p1.det((2, 0)), 0);
 
         let p3 = Point::new(3, 0);
-        assert_eq!(p1.det_origin((2,0), p3), 0);
+        assert_eq!(p1.det_origin((2, 0), p3), 0);
+    }
+
+    #[test]
+    fn test_rotate() {
+        let p = Point::new(5.0, 0.0);
+        assert!(p
+            .rotate(120.0)
+            .equal_with_eps(&Point::new(-2.49999999999999911182, 4.33012701892219364908)));
     }
 }
