@@ -21,6 +21,7 @@
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/bc06ff067fb2f828ec05f492ef6ceb3ea1a0fe86/solutions/many_formulas.rs#L43
+/// * https://github.com/hiroshi-maybe/atcoder/blob/510db1272f7f295f405c0f359148c76a749fb39e/solutions/matrix_reducing.rs#L54
 ///
 
 // region: bitmask
