@@ -127,8 +127,7 @@ mod tests_bitmask {
 
     #[test]
     fn test_bitset_zeros() {
-        dbg!(5usize.count_ones(), 5usize.count_zeros());
-        let mut it = dbg!(BitSet::from(5)).zeros();
+        let mut it = BitSet::from(5).zeros();
 
         assert_eq!(it.next(), Some(1));
         assert_eq!(it.next(), None);
