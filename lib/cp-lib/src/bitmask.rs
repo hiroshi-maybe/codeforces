@@ -48,22 +48,40 @@ mod bitmask {
         }
     }
 
-    #[derive(Debug, PartialEq, Copy, Clone)]
+    #[derive(PartialEq, Copy, Clone)]
     pub struct BitSet(usize);
     impl BitSet {
         pub fn ith(&self, i: usize) -> bool { (self.0 >> i) & 1 == 1 }
-        pub fn ones(&self) -> BitSetOnesIterator {
-            BitSetOnesIterator { set: BitSet(self.0), iter: 0..(self.0.count_ones() + self.0.count_zeros()) as usize }
-         }
+        pub fn ones(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), true) }
+        pub fn zeros(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), false) }
+        pub fn val(&self) -> usize { self.0 }
+        pub fn set(&mut self, i: usize) -> bool { if self.ith(i) { false } else { self.0 |= 1 << i; true } }
+        pub fn pos_of_leading_one(&self) -> Option<usize> {
+            (0..usize::BITS as usize).map(|i| self.ith(i)).rposition(std::convert::identity)
+        }
     }
     impl From<usize> for BitSet {
         fn from(val: usize) -> BitSet { BitSet(val) }
     }
-    pub struct BitSetOnesIterator { set: BitSet, iter: std::ops::Range<usize> }
-    impl Iterator for BitSetOnesIterator {
+    impl std::fmt::Debug for BitSet {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            let v = self.0;
+            std::fmt::Binary::fmt(&v, f)
+        }
+    }
+    pub struct BitSetBitsIterator { set: BitSet, iter: std::ops::Range<usize>, is_ones: bool }
+    impl BitSetBitsIterator {
+        pub fn new(set: BitSet, is_ones: bool) -> Self {
+            BitSetBitsIterator {
+                set: set, iter: 0..set.pos_of_leading_one().map_or(0, |p|p+1), is_ones: is_ones
+            }
+        }
+    }
+    impl Iterator for BitSetBitsIterator {
         type Item = usize;
         fn next(&mut self) -> Option<Self::Item> {
-            let set = self.set; self.iter.find(|&i| set.ith(i))
+            let is_ones = self.is_ones; let set = self.set;
+            self.iter.find(|&i| if is_ones { set.ith(i) } else { !set.ith(i) })
         }
     }
 }
@@ -105,5 +123,48 @@ mod tests_bitmask {
         assert_eq!(it.next(), Some(0));
         assert_eq!(it.next(), Some(2));
         assert_eq!(it.next(), None);
+    }
+
+    #[test]
+    fn test_bitset_zeros() {
+        dbg!(5usize.count_ones(), 5usize.count_zeros());
+        let mut it = dbg!(BitSet::from(5)).zeros();
+
+        assert_eq!(it.next(), Some(1));
+        assert_eq!(it.next(), None);
+    }
+
+    #[test]
+    fn test_bitset_val() {
+        let bs = BitSet::from(5);
+        assert_eq!(bs.val(), 5);
+
+        let bs = BitSet::from(0);
+        assert_eq!(bs.val(), 0);
+
+        let bs = BitSet::from(usize::MAX);
+        assert_eq!(bs.val(), usize::MAX);
+    }
+
+    #[test]
+    fn test_bitset_set() {
+        let mut bs = BitSet::from(0);
+        assert_eq!(bs.set(1), true);
+        assert_eq!(bs.val(), 2);
+
+        assert_eq!(bs.set(1), false);
+        assert_eq!(bs.val(), 2);
+
+        assert_eq!(bs.set(4), true);
+        assert_eq!(bs.val(), 18);
+    }
+
+    #[test]
+    fn test_bitset_pos_of_leading_one() {
+        let bs = BitSet::from(7);
+        assert_eq!(bs.pos_of_leading_one(), Some(2));
+
+        let bs = BitSet::from(0);
+        assert_eq!(bs.pos_of_leading_one(), None);
     }
 }
