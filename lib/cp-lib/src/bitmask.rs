@@ -55,7 +55,7 @@ mod bitmask {
         pub fn ones(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), true) }
         pub fn zeros(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), false) }
         pub fn val(&self) -> usize { self.0 }
-        pub fn set(&mut self, i: usize) -> bool { if self.contains(i) { false } else { self.0 |= 1 << i; true } }
+        pub fn put(&mut self, i: usize) -> bool { if self.contains(i) { false } else { self.0 |= 1 << i; true } }
         pub fn len(&self) -> usize {
             (0..usize::BITS as usize).map(|i| self.contains(i)).rposition(std::convert::identity).map_or(0, |i| i+1)
         }
@@ -112,7 +112,7 @@ mod tests_bitmask {
     }
 
     #[test]
-    fn test_bitset_ith() {
+    fn test_bitset_contains() {
         let bs = BitSet::from(5);
 
         assert!(bs.contains(0));
@@ -151,15 +151,15 @@ mod tests_bitmask {
     }
 
     #[test]
-    fn test_bitset_set() {
+    fn test_bitset_put() {
         let mut bs = BitSet::from(0);
-        assert_eq!(bs.set(1), true);
+        assert_eq!(bs.put(1), true);
         assert_eq!(bs.val(), 2);
 
-        assert_eq!(bs.set(1), false);
+        assert_eq!(bs.put(1), false);
         assert_eq!(bs.val(), 2);
 
-        assert_eq!(bs.set(4), true);
+        assert_eq!(bs.put(4), true);
         assert_eq!(bs.val(), 18);
     }
 
