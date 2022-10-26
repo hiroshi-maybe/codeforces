@@ -59,6 +59,11 @@ mod bitmask {
         pub fn len(&self) -> usize {
             (0..usize::BITS as usize).map(|i| self.contains(i)).rposition(std::convert::identity).map_or(0, |i| i+1)
         }
+        pub fn subset(&self, range: std::ops::Range<usize>) -> BitSet {
+            assert!(range.end <= self.len());
+            let mut dat = self.0; dat >>= range.start;
+            BitSet::from(dat & ((1 << range.len()) -1))
+        }
     }
     impl From<usize> for BitSet {
         fn from(val: usize) -> BitSet { BitSet(val) }
@@ -159,11 +164,19 @@ mod tests_bitmask {
     }
 
     #[test]
-    fn test_bitset_pos_of_leading_one() {
+    fn test_bitset_len() {
         let bs = BitSet::from(7);
         assert_eq!(bs.len(), 3);
 
         let bs = BitSet::from(0);
         assert_eq!(bs.len(), 0);
+    }
+
+    #[test]
+    fn test_bitset_subset() {
+        let bs = BitSet::from(21); // 10101
+        assert_eq!(bs.subset(1..4), BitSet::from(2));
+        assert_eq!(bs.subset(0..5), bs);
+        assert_eq!(bs.subset(2..5), BitSet::from(5));
     }
 }
