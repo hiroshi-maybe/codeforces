@@ -51,13 +51,13 @@ mod bitmask {
     #[derive(PartialEq, Copy, Clone)]
     pub struct BitSet(usize);
     impl BitSet {
-        pub fn ith(&self, i: usize) -> bool { (self.0 >> i) & 1 == 1 }
+        pub fn contains(&self, i: usize) -> bool { (self.0 >> i) & 1 == 1 }
         pub fn ones(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), true) }
         pub fn zeros(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), false) }
         pub fn val(&self) -> usize { self.0 }
-        pub fn set(&mut self, i: usize) -> bool { if self.ith(i) { false } else { self.0 |= 1 << i; true } }
-        pub fn pos_of_leading_one(&self) -> Option<usize> {
-            (0..usize::BITS as usize).map(|i| self.ith(i)).rposition(std::convert::identity)
+        pub fn set(&mut self, i: usize) -> bool { if self.contains(i) { false } else { self.0 |= 1 << i; true } }
+        pub fn len(&self) -> usize {
+            (0..usize::BITS as usize).map(|i| self.contains(i)).rposition(std::convert::identity).map_or(0, |i| i+1)
         }
     }
     impl From<usize> for BitSet {
@@ -73,7 +73,7 @@ mod bitmask {
     impl BitSetBitsIterator {
         pub fn new(set: BitSet, is_ones: bool) -> Self {
             BitSetBitsIterator {
-                set: set, iter: 0..set.pos_of_leading_one().map_or(0, |p|p+1), is_ones: is_ones
+                set: set, iter: 0..set.len(), is_ones: is_ones
             }
         }
     }
@@ -81,7 +81,7 @@ mod bitmask {
         type Item = usize;
         fn next(&mut self) -> Option<Self::Item> {
             let is_ones = self.is_ones; let set = self.set;
-            self.iter.find(|&i| if is_ones { set.ith(i) } else { !set.ith(i) })
+            self.iter.find(|&i| if is_ones { set.contains(i) } else { !set.contains(i) })
         }
     }
 }
@@ -110,10 +110,10 @@ mod tests_bitmask {
     fn test_bitset_ith() {
         let bs = BitSet::from(5);
 
-        assert!(bs.ith(0));
-        assert!(!bs.ith(1));
-        assert!(bs.ith(2));
-        assert!(!bs.ith(3));
+        assert!(bs.contains(0));
+        assert!(!bs.contains(1));
+        assert!(bs.contains(2));
+        assert!(!bs.contains(3));
     }
 
     #[test]
@@ -161,9 +161,9 @@ mod tests_bitmask {
     #[test]
     fn test_bitset_pos_of_leading_one() {
         let bs = BitSet::from(7);
-        assert_eq!(bs.pos_of_leading_one(), Some(2));
+        assert_eq!(bs.len(), 3);
 
         let bs = BitSet::from(0);
-        assert_eq!(bs.pos_of_leading_one(), None);
+        assert_eq!(bs.len(), 0);
     }
 }
