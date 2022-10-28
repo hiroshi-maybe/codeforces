@@ -10,18 +10,29 @@
 /// # Usage
 ///
 /// ```
-/// use cp_lib::BitMask;
+/// use cp_lib::{BitMask, BitSet};
 ///
 /// let mut cnt = 0;
-/// for mask in BitMask::new(2) {
-///     cnt += mask.ones().count();
+/// for bitset in BitMask::new(2) {
+///     cnt += bitset.ones().count();
 /// }
 /// assert_eq!(cnt, 4);
+///
+/// let mut bitset = BitSet::from(5);
+///
+/// assert!(bitset[0]);
+/// assert!(!bitset[1]);
+/// assert!(bitset[2]);
+/// assert_eq!(bitset.subset(0..2), BitSet::from(1));
+/// assert!(bitset.put(1));
+/// assert_eq!(bitset.val(), 7);
+///
 /// ```
 ///
 /// # Used problems:
 /// * https://github.com/hiroshi-maybe/atcoder/blob/bc06ff067fb2f828ec05f492ef6ceb3ea1a0fe86/solutions/many_formulas.rs#L43
 /// * https://github.com/hiroshi-maybe/atcoder/blob/510db1272f7f295f405c0f359148c76a749fb39e/solutions/matrix_reducing.rs#L54
+/// * https://github.com/hiroshi-maybe/atcoder/blob/7c3d34a0c9daf6ca8c8519a7962adff91fce9ded/solutions/booster.rs#L76
 ///
 
 // region: bitmask
@@ -72,6 +83,12 @@ mod bitmask {
     }
     impl From<usize> for BitSet {
         fn from(val: usize) -> BitSet { BitSet(val) }
+    }
+    impl std::ops::Index<usize> for BitSet {
+        type Output = bool;
+        fn index(&self, bit: usize) -> &bool {
+            if self.contains(bit) { &true } else { &false }
+        }
     }
     impl std::fmt::Debug for BitSet {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -124,6 +141,16 @@ mod tests_bitmask {
         assert!(!bs.contains(1));
         assert!(bs.contains(2));
         assert!(!bs.contains(3));
+    }
+
+    #[test]
+    fn test_bitset_index() {
+        let bs = BitSet::from(5);
+
+        assert!(bs[0]);
+        assert!(!bs[1]);
+        assert!(bs[2]);
+        assert!(!bs[3]);
     }
 
     #[test]
