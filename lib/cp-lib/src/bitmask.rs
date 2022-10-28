@@ -51,19 +51,24 @@ mod bitmask {
     #[derive(PartialEq, Copy, Clone)]
     pub struct BitSet(usize);
     impl BitSet {
+        pub fn full_bits(len: usize) -> BitSet { BitSet((1 << len) - 1) }
         pub fn contains(&self, i: usize) -> bool { (self.0 >> i) & 1 == 1 }
         pub fn ones(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), true) }
         pub fn zeros(&self) -> BitSetBitsIterator { BitSetBitsIterator::new(BitSet(self.0), false) }
         pub fn val(&self) -> usize { self.0 }
         pub fn put(&mut self, i: usize) -> bool { if self.contains(i) { false } else { self.0 |= 1 << i; true } }
         pub fn len(&self) -> usize {
-            (0..usize::BITS as usize).map(|i| self.contains(i)).rposition(std::convert::identity).map_or(0, |i| i+1)
+            let bits = if usize::max_value() as u64 == u64::max_value() { 64 } else { 32 };
+            (0..bits as usize).map(|i| self.contains(i)).rposition(std::convert::identity).map_or(0, |i| i+1)
         }
         pub fn subset(&self, range: std::ops::Range<usize>) -> BitSet {
-            assert!(range.end <= self.len());
             let mut dat = self.0; dat >>= range.start;
             BitSet::from(dat & ((1 << range.len()) -1))
         }
+        pub fn concat<T: Into<BitSet>>(&self, other: T) -> BitSet {
+            let other = other.into();
+            BitSet::from((self.0 << other.len()) | other.val())
+         }
     }
     impl From<usize> for BitSet {
         fn from(val: usize) -> BitSet { BitSet(val) }
@@ -178,5 +183,25 @@ mod tests_bitmask {
         assert_eq!(bs.subset(1..4), BitSet::from(2));
         assert_eq!(bs.subset(0..5), bs);
         assert_eq!(bs.subset(2..5), BitSet::from(5));
+    }
+
+    #[test]
+    fn test_bitset_concat() {
+        let bs1 = BitSet::from(21); // 10101
+        let bs2 = BitSet::from(10); // 1010
+        let bs = bs1.concat(bs2);
+        assert_eq!(bs, BitSet::from((21 << 4) + 10));
+
+        let bs = bs1.concat(10);
+        assert_eq!(bs, BitSet::from((21 << 4) + 10));
+    }
+
+    #[test]
+    fn test_bitset_full_bits() {
+        let bs = BitSet::full_bits(3);
+        assert_eq!(bs.val(), 7);
+
+        let bs = BitSet::full_bits(7);
+        assert_eq!(bs.val(), 127);
     }
 }
