@@ -6,6 +6,7 @@
 ///
 /// * Iterate 0..1 << n
 /// * Check or iterate i-th one bit in a binary representation
+/// * BitSet APIs are inspired by {fixedbitset crate}[https://docs.rs/fixedbitset/latest/fixedbitset/index.html]
 ///
 /// # Usage
 ///
