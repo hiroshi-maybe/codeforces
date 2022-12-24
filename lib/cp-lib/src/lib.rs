@@ -22,6 +22,6 @@ pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
 pub use next_permutation::{next_permutation, Permutations};
 pub use partition::PartitionSlice;
 pub use prefix_sum::PrefixSum2d;
-pub use prime_num::{Divisors, LinearSieve};
+pub use prime_num::{IntFactorial, LinearSieve};
 pub use segment_tree::{Monoid, RangeMaxQuery, RangeMinQuery, SegmentTree};
 pub use union_find::UnionFind;

@@ -32,6 +32,7 @@
 /// * https://github.com/hiroshi-maybe/atcoder/blob/ab94707b57bc09e7083104d63d3dc49854e10002/solutions/coprime.rs#L54
 /// * https://github.com/hiroshi-maybe/atcoder/blob/293d4122fb0cd64ba613e5a543da9156d8d68648/solutions/factors_of_factorial.rs#L116
 /// * https://github.com/hiroshi-maybe/atcoder/blob/4a67f474a7af2837c4f14826e006e11307a14165/solutions/prime_sum_game.rs#L36
+/// * https://github.com/hiroshi-maybe/atcoder/blob/4adf102316809fea2064e0d948254ade7743abab/solutions/factorial_and_multiple.rs#L64
 ///
 
 // region: sieve
@@ -81,7 +82,7 @@ pub use sieve::*;
 /// # Examples
 ///
 /// ```
-/// use cp_lib::Divisors;
+/// use cp_lib::IntFactorial;
 ///
 /// assert_eq!(12_i64.divisors(), vec![1,2,3,4,6,12]);
 /// ```
@@ -114,9 +115,14 @@ pub use sieve::*;
 #[rustfmt::skip]
 #[allow(dead_code)]
 mod int_fact {
-    pub trait Divisors where Self: Sized { fn divisors(&self) -> Vec<Self>; }
+    use std::collections::HashMap;
+    pub trait IntFactorial where Self: Sized {
+        fn divisors(&self) -> Vec<Self>;
+        fn prime_facts(&self) -> Vec<Self>;
+        fn prime_facts_map(&self) -> HashMap<Self, usize>;
+    }
     macro_rules! impl_int_fact { ($integer:ty) => {
-        impl Divisors for $integer {
+        impl IntFactorial for $integer {
             fn divisors(&self) -> Vec<Self> {
                 let n = *self; let mut res = vec![];
                 for d in (1..).take_while(|&d| d * d <= n).filter(|&d| n % d == 0) {
@@ -126,6 +132,25 @@ mod int_fact {
                 }
                 res.sort_unstable();
                 res
+            }
+            fn prime_facts(&self) -> Vec<Self> {
+                let mut n = *self; let mut res = vec![];
+                for p in (2..).take_while(|&p| p * p <= *self) {
+                    while n % p == 0 {
+                        res.push(p);
+                        n /= p;
+                    }
+                }
+                if n > 1 { res.push(n); }
+                res
+            }
+            fn prime_facts_map(&self) -> HashMap<Self, usize> {
+                let ps = self.prime_facts();
+                let mut map = HashMap::new();
+                for p in ps {
+                    *(map.entry(p).or_insert(0)) += 1;
+                }
+                map
             }
         }
     }; }
@@ -163,6 +188,8 @@ mod tests_sieve {
 
 #[cfg(test)]
 mod tests_int_fact {
+    use std::collections::HashMap;
+
     use super::*;
 
     #[test]
@@ -175,5 +202,25 @@ mod tests_int_fact {
 
         assert_eq!(0.divisors(), vec![]);
         assert_eq!((-1).divisors(), vec![]);
+    }
+
+    #[test]
+    fn test_prime_facts() {
+        assert_eq!(120.prime_facts(), vec![2, 2, 2, 3, 5]);
+        assert!(1.prime_facts().is_empty());
+        assert!(0.prime_facts().is_empty());
+        assert!((-1).prime_facts().is_empty());
+    }
+
+    #[test]
+    fn test_prime_facts_map() {
+        assert_eq!(
+            120.prime_facts_map(),
+            HashMap::from([(2, 3), (3, 1), (5, 1)])
+        );
+        assert_eq!(13.prime_facts_map(), HashMap::from([(13, 1)]));
+        assert!(1.prime_facts_map().is_empty());
+        assert!(0.prime_facts_map().is_empty());
+        assert!((-1).prime_facts_map().is_empty());
     }
 }
