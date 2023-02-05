@@ -25,5 +25,5 @@ pub use partition::PartitionSlice;
 pub use prefix_sum::PrefixSum2d;
 pub use prime_num::{IntFactorial, LinearSieve};
 pub use segment_tree::{Monoid, RangeMaxQuery, RangeMinQuery, SegmentTree};
-pub use trie::TrieNode;
+pub use trie::Trie;
 pub use union_find::UnionFind;
