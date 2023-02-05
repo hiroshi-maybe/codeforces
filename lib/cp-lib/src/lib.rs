@@ -10,6 +10,7 @@ pub mod partition;
 pub mod prefix_sum;
 pub mod prime_num;
 pub mod segment_tree;
+pub mod trie;
 pub mod union_find;
 
 pub use bit::BIT;
@@ -24,4 +25,5 @@ pub use partition::PartitionSlice;
 pub use prefix_sum::PrefixSum2d;
 pub use prime_num::{IntFactorial, LinearSieve};
 pub use segment_tree::{Monoid, RangeMaxQuery, RangeMinQuery, SegmentTree};
+pub use trie::TrieNode;
 pub use union_find::UnionFind;
