@@ -35,6 +35,22 @@ mod trie {
         const BASE: u8 = b'a';
     }
 
+    pub trait StringEncodable {
+        fn encode<C: CharSet>(&self) -> Vec<u8>;
+    }
+
+    impl StringEncodable for &str {
+        fn encode<C: CharSet>(&self) -> Vec<u8> {
+            self.chars().map(|c| C::char_to_u8(c)).collect()
+        }
+    }
+
+    impl StringEncodable for Vec<char> {
+        fn encode<C: CharSet>(&self) -> Vec<u8> {
+            self.iter().map(|&c| C::char_to_u8(c)).collect()
+        }
+    }
+
     impl<C: CharSet> Trie<C> {
         pub fn new() -> Self {
             Trie {
@@ -43,30 +59,26 @@ mod trie {
             }
         }
 
-        pub fn insert(&mut self, id: usize, cs: Vec<char>) {
-            let cs = Self::normalize(cs);
+        pub fn insert<S: StringEncodable>(&mut self, id: usize, str: S) {
+            let cs = str.encode::<C>();
             self.root_node.insert(id, cs.as_slice())
         }
 
-        pub fn erase(&mut self, id: usize, cs: Vec<char>) -> bool {
-            let cs = Self::normalize(cs);
+        pub fn erase<S: StringEncodable>(&mut self, id: usize, str: S) -> bool {
+            let cs = str.encode::<C>();
             self.root_node.erase(id, cs.as_slice())
         }
 
-        pub fn search(&self, cs: Vec<char>) -> Option<usize> {
-            let cs = Self::normalize(cs);
+        pub fn search<S: StringEncodable>(&self, str: S) -> Option<usize> {
+            let cs = str.encode::<C>();
             let node = self.root_node.find(cs.as_slice());
             node.and_then(|n| n.terminated_str_ids.iter().next().copied())
         }
 
-        pub fn prefix_cnt(&self, cs: Vec<char>) -> usize {
-            let cs = Self::normalize(cs);
+        pub fn prefix_cnt<S: StringEncodable>(&self, str: S) -> usize {
+            let cs = str.encode::<C>();
             let node = self.root_node.find(cs.as_slice());
             node.map_or(0, |n| n.matched_string_cnt)
-        }
-
-        fn normalize(cs: Vec<char>) -> Vec<u8> {
-            cs.iter().map(|&c| C::char_to_u8(c)).collect::<Vec<_>>()
         }
     }
 
@@ -142,26 +154,26 @@ mod tests_trie_tree {
     #[test]
     fn test_insert_and_search() {
         let mut trie = LowerAlphabetTrie::new();
-        trie.insert(0, "apple".chars().collect());
+        trie.insert(0, "apple");
 
-        assert_eq!(trie.search("apple".chars().collect()), Some(0));
-        assert_eq!(trie.search("appl".chars().collect()), None);
+        assert_eq!(trie.search("apple"), Some(0));
+        assert_eq!(trie.search("appl"), None);
 
-        trie.insert(1, "app".chars().collect());
+        trie.insert(1, "app".chars().collect::<Vec<_>>());
 
-        assert_eq!(trie.search("app".chars().collect()), Some(1));
-        assert_eq!(trie.search("appl".chars().collect()), None);
-        assert_eq!(trie.prefix_cnt("app".chars().collect()), 2);
+        assert_eq!(trie.search("app"), Some(1));
+        assert_eq!(trie.search("appl"), None);
+        assert_eq!(trie.prefix_cnt("app"), 2);
     }
 
     #[test]
     fn test_insert_and_erase() {
         let mut trie = LowerAlphabetTrie::new();
-        trie.insert(0, "apple".chars().collect());
-        trie.insert(1, "app".chars().collect());
+        trie.insert(0, "apple");
+        trie.insert(1, "app".chars().collect::<Vec<_>>());
 
-        assert_eq!(trie.erase(0, "app".chars().collect()), false);
-        assert_eq!(trie.erase(1, "app".chars().collect()), true);
-        assert_eq!(trie.search("app".chars().collect()), None);
+        assert_eq!(trie.erase(0, "app"), false);
+        assert_eq!(trie.erase(1, "app"), true);
+        assert_eq!(trie.search("app"), None);
     }
 }
