@@ -16,7 +16,7 @@ mod trie {
     use std::marker::PhantomData;
     pub type LowerAlphabetTrie = Trie<LowerAlphabetSet>;
     pub struct Trie<C: CharSet> {
-        root_node: Box<TrieNode<C>>,
+        pub root_node: Box<TrieNode<C>>,
         _marker: PhantomData<C>,
     }
 
@@ -46,6 +46,12 @@ mod trie {
     }
 
     impl StringEncodable for Vec<char> {
+        fn encode<C: CharSet>(&self) -> Vec<u8> {
+            self.iter().map(|&c| C::char_to_u8(c)).collect()
+        }
+    }
+
+    impl StringEncodable for &Vec<char> {
         fn encode<C: CharSet>(&self) -> Vec<u8> {
             self.iter().map(|&c| C::char_to_u8(c)).collect()
         }
@@ -83,10 +89,10 @@ mod trie {
     }
 
     #[derive(Clone)]
-    struct TrieNode<C: CharSet> {
-        matched_string_cnt: usize, // # of strings in the subtree of the node
-        terminated_str_ids: HashSet<usize>, // IDs of strings ending here
-        children: Vec<Option<Box<TrieNode<C>>>>,
+    pub struct TrieNode<C: CharSet> {
+        pub matched_string_cnt: usize, // # of strings in the subtree of the node
+        pub terminated_str_ids: HashSet<usize>, // IDs of strings ending here
+        pub children: Vec<Option<Box<TrieNode<C>>>>,
         _marker: PhantomData<C>,
     }
 
@@ -144,7 +150,7 @@ mod trie {
         }
     }
 }
-pub use trie::{CharSet, LowerAlphabetSet, LowerAlphabetTrie, Trie};
+pub use trie::{CharSet, LowerAlphabetSet, LowerAlphabetTrie, StringEncodable, Trie};
 // endregion: trie
 
 #[cfg(test)]
