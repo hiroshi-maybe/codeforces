@@ -5,6 +5,25 @@
 /// # Use cases
 /// * Find the longest prefix match by pre-processing strings and building a tree
 ///
+/// # Usage
+/// ```
+/// use cp_lib::LowerAlphabetTrie;
+///
+/// let mut trie = LowerAlphabetTrie::new();
+/// 
+/// trie.insert(0, "apple");
+/// assert_eq!(trie.search("apple"), Some(0));
+/// assert_eq!(trie.search("appl"), None);
+///
+/// trie.insert(1, "app");
+/// assert_eq!(trie.search("app"), Some(1));
+/// assert_eq!(trie.search("appl"), None);
+/// assert_eq!(trie.prefix_cnt("app"), 2);
+/// ```
+///
+/// # Used problems
+/// * https://github.com/hiroshi-maybe/atcoder/blob/7597da3164ac5ea67e00185553ae340834cdad00/solutions/karuta.rs#L70
+///
 /// # References:
 /// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/trie.cpp
 ///
@@ -28,7 +47,32 @@ mod trie {
         }
     }
 
-    #[derive(Copy, Clone)]
+    pub struct TrieNodeIterator<'a, C: CharSet> {
+        str: Vec<u8>,
+        cur_pos: usize,
+        cur_node: &'a Box<TrieNode<C>>,
+    }
+    impl<'a, C> Iterator for TrieNodeIterator<'a, C>
+    where
+        C: CharSet,
+    {
+        type Item = &'a TrieNode<C>;
+        fn next(&mut self) -> Option<Self::Item> {
+            if let Some(child) = self
+                .str
+                .get(self.cur_pos)
+                .and_then(|&c| self.cur_node.children[c as usize].as_ref())
+            {
+                self.cur_node = child;
+                self.cur_pos += 1;
+                Some(child)
+            } else {
+                None
+            }
+        }
+    }
+
+    #[derive(Copy, Clone, Debug)]
     pub struct LowerAlphabetSet;
     impl CharSet for LowerAlphabetSet {
         const DAT_SIZE: usize = 26;
@@ -37,11 +81,16 @@ mod trie {
 
     pub trait StringEncodable {
         fn encode<C: CharSet>(&self) -> Vec<u8>;
+        fn char_count(&self) -> usize;
     }
 
     impl StringEncodable for &str {
         fn encode<C: CharSet>(&self) -> Vec<u8> {
             self.chars().map(|c| C::char_to_u8(c)).collect()
+        }
+
+        fn char_count(&self) -> usize {
+            self.chars().count()
         }
     }
 
@@ -49,11 +98,18 @@ mod trie {
         fn encode<C: CharSet>(&self) -> Vec<u8> {
             self.iter().map(|&c| C::char_to_u8(c)).collect()
         }
+        fn char_count(&self) -> usize {
+            self.len()
+        }
     }
 
     impl StringEncodable for &Vec<char> {
         fn encode<C: CharSet>(&self) -> Vec<u8> {
             self.iter().map(|&c| C::char_to_u8(c)).collect()
+        }
+
+        fn char_count(&self) -> usize {
+            self.len()
         }
     }
 
@@ -76,23 +132,40 @@ mod trie {
         }
 
         pub fn search<S: StringEncodable>(&self, str: S) -> Option<usize> {
-            let cs = str.encode::<C>();
-            let node = self.root_node.find(cs.as_slice());
-            node.and_then(|n| n.terminated_str_ids.iter().next().copied())
+            self.find(str)
+                .and_then(|n| n.terminated_str_ids.iter().next().copied())
         }
 
         pub fn prefix_cnt<S: StringEncodable>(&self, str: S) -> usize {
+            self.find(str).map_or(0, |n| n.matched_string_cnt)
+        }
+
+        pub fn find<S: StringEncodable>(&self, str: S) -> Option<&TrieNode<C>> {
+            let len = str.char_count();
+            self.node_iter(str).enumerate().last().and_then(|(i, n)| {
+                if i == len - 1 {
+                    Some(n)
+                } else {
+                    None
+                }
+            })
+        }
+
+        pub fn node_iter<S: StringEncodable>(&self, str: S) -> TrieNodeIterator<C> {
             let cs = str.encode::<C>();
-            let node = self.root_node.find(cs.as_slice());
-            node.map_or(0, |n| n.matched_string_cnt)
+            TrieNodeIterator::<C> {
+                str: cs,
+                cur_pos: 0,
+                cur_node: &self.root_node,
+            }
         }
     }
 
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct TrieNode<C: CharSet> {
         pub matched_string_cnt: usize, // # of strings in the subtree of the node
         pub terminated_str_ids: HashSet<usize>, // IDs of strings ending here
-        pub children: Vec<Option<Box<TrieNode<C>>>>,
+        children: Vec<Option<Box<TrieNode<C>>>>,
         _marker: PhantomData<C>,
     }
 
@@ -135,19 +208,6 @@ mod trie {
                 self.terminated_str_ids.remove(&id)
             }
         }
-
-        fn find(&self, cs: &[u8]) -> Option<&TrieNode<C>> {
-            if let Some(c) = cs.first() {
-                let i = *c as usize;
-                if let Some(child) = self.children[i].as_ref() {
-                    child.find(&cs[1..])
-                } else {
-                    None
-                }
-            } else {
-                Some(self)
-            }
-        }
     }
 }
 pub use trie::{CharSet, LowerAlphabetSet, LowerAlphabetTrie, StringEncodable, Trie};
@@ -181,5 +241,20 @@ mod tests_trie_tree {
         assert_eq!(trie.erase(0, "app"), false);
         assert_eq!(trie.erase(1, "app"), true);
         assert_eq!(trie.search("app"), None);
+    }
+
+    #[test]
+    fn test_iterator() {
+        let mut trie = LowerAlphabetTrie::new();
+        trie.insert(0, "apple");
+
+        let mut it = trie.node_iter("app");
+        let n = it.next();
+        assert_eq!(n.unwrap().matched_string_cnt, 1);
+        let n = it.next();
+        assert_eq!(n.unwrap().matched_string_cnt, 1);
+        let n = it.next();
+        assert_eq!(n.unwrap().matched_string_cnt, 1);
+        assert!(it.next().is_none());
     }
 }
