@@ -36,6 +36,7 @@
 /// * https://github.com/hiroshi-maybe/atcoder/blob/3d3fb3ee32fc028824707166bca0febba3da9a7c/solutions/mst_1.rs#L54
 /// * https://github.com/hiroshi-maybe/atcoder/blob/ae67b896152e7d7a4e61815d8365c9da72b6893c/solutions/range_sums.rs#L34
 /// * https://github.com/hiroshi-maybe/atcoder/commit/a87f791d05d71de7fdf6e8b51f045d8667288764#diff-adca4b91993bcfbfdb1d3ab68dffb2e8709b42e1afdd8ff94b2f862e2afd01c9R58
+/// * https://github.com/hiroshi-maybe/atcoder/blob/e23ae771867a43acef196f467655ce565fbdb629/solutions/tying_rope.rs#L49
 ///
 
 // region: union_find
