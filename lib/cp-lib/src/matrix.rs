@@ -36,10 +36,12 @@ pub mod matrix {
     pub trait MatrixElement {
         type InternalValue: Clone + Copy;
         const ZERO: Self::InternalValue;
+        const ONE: Self::InternalValue;
     }
     impl MatrixElement for i64 {
         type InternalValue = Self;
         const ZERO: Self::InternalValue = 0;
+        const ONE: Self::InternalValue = 1;
     }
 
     #[derive(Debug, Default, Hash, PartialEq, Eq)]
@@ -52,6 +54,28 @@ pub mod matrix {
         pub fn new(n: usize, m: usize) -> Self {
             let dat = vec![vec![Element::ZERO; m]; n];
             Matrix { n, m, dat }
+        }
+    }
+    impl<Element: MatrixElement> Matrix<Element>
+    where
+        Matrix<Element>: MulAssign<Self>,
+    {
+        /// res = A^n, O(N^3*lg n) time
+        pub fn pow(&self, mut exp: u64) -> Self {
+            assert_eq!(self.n, self.m);
+            let mut res = Matrix::<Element>::new(self.n, self.n);
+            for i in 0..self.n {
+                res.dat[i][i] = Element::ONE;
+            }
+            let mut a = self.clone();
+            while exp > 0 {
+                if exp & 1 == 1 {
+                    res *= a.clone();
+                }
+                a *= a.clone();
+                exp >>= 1;
+            }
+            res
         }
     }
     impl<Element: MatrixElement> Clone for Matrix<Element> {
@@ -106,7 +130,7 @@ pub mod matrix {
         fn mul_assign(&mut self, rhs: Rhs) {
             let rhs = rhs.into();
             assert_eq!(self.m, rhs.n);
-            let mut new_mx = Matrix::<Element>::new(dbg!(self.n), dbg!(rhs.m));
+            let mut new_mx = Matrix::<Element>::new(self.n, rhs.m);
             for i in 0..self.n {
                 for j in 0..rhs.m {
                     for k in 0..self.m {
@@ -193,5 +217,13 @@ mod tests_matrix {
             res,
             Matrix::<i64>::from(&vec![vec![9, 12, 15], vec![19, 26, 33], vec![29, 40, 51]])
         );
+    }
+
+    #[test]
+    fn test_pow() {
+        let a = Matrix::<i64>::from(&vec![vec![1, 2], vec![3, 4]]);
+        let expected = a.clone() * a.clone() * a.clone();
+
+        assert_eq!(a.pow(3), expected);
     }
 }
