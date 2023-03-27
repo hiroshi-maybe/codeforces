@@ -182,12 +182,14 @@ pub mod matrix {
         }
     }
 }
-pub use matrix::Matrix;
+pub use matrix::{Matrix, MatrixElement};
 
 // endregion: matrix
 
 #[cfg(test)]
 mod tests_matrix {
+    use std::sync::atomic::AtomicI64;
+
     use crate::modint::ModInt;
 
     use super::*;
@@ -245,6 +247,59 @@ mod tests_matrix {
         let a = Matrix::<ModInt>::from(&vec![
             vec![ModInt::from(10101010), ModInt::from(20202020)],
             vec![ModInt::from(30303030), ModInt::from(40404040)],
+        ]);
+        let expected = a.clone() * a.clone() * a.clone();
+
+        assert_eq!(a.pow(3), expected);
+    }
+
+    #[test]
+    fn test_pow_custom_type() {
+        pub struct Modulo {
+            m: AtomicI64,
+        }
+        impl Modulo {
+            pub const fn new(m: i64) -> Self {
+                Modulo {
+                    m: AtomicI64::new(m),
+                }
+            }
+            fn update(&self, m: i64) {
+                self.m.store(m, std::sync::atomic::Ordering::SeqCst);
+            }
+            fn get(&self) -> i64 {
+                self.m.load(std::sync::atomic::Ordering::SeqCst)
+            }
+        }
+        static MODULO: Modulo = Modulo::new(1);
+        MODULO.update(101);
+
+        #[derive(Copy, Clone, Debug, PartialEq)]
+        struct DynMod(i64);
+        impl MatrixElement for DynMod {
+            type InternalValue = Self;
+            fn zero() -> Self::InternalValue {
+                DynMod(0)
+            }
+            fn one() -> Self::InternalValue {
+                DynMod(1)
+            }
+        }
+        impl std::ops::Mul for DynMod {
+            type Output = Self;
+            fn mul(self, rhs: Self) -> Self::Output {
+                DynMod(self.0 * rhs.0 % MODULO.get())
+            }
+        }
+        impl std::ops::AddAssign for DynMod {
+            fn add_assign(&mut self, rhs: Self) {
+                self.0 = self.0 + rhs.0 % MODULO.get();
+            }
+        }
+
+        let a = Matrix::<DynMod>::from(&vec![
+            vec![DynMod(10101010), DynMod(20202020)],
+            vec![DynMod(30303030), DynMod(40404040)],
         ]);
         let expected = a.clone() * a.clone() * a.clone();
 

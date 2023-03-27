@@ -20,7 +20,7 @@ pub use gcd::{gcd, lcm};
 pub use geometry::{Circle, Point};
 pub use graph::has_cyclic;
 pub use grid_graph::GridGraph;
-pub use matrix::Matrix;
+pub use matrix::{Matrix, MatrixElement};
 pub use modint::{Com, ModInt1000000007, ModInt998244353, Modulus};
 pub use next_permutation::{next_permutation, Permutations};
 pub use partition::PartitionSlice;
