@@ -25,6 +25,9 @@
 ///
 /// * https://github.com/hiroshi-maybe/topcoder/blob/master/lib/matrix.cpp
 ///
+/// # Used problems:
+/// * https://github.com/hiroshi-maybe/atcoder/blob/ddd85e57bb1f2a2c7564f53c9ff28964717b5ede/solutions/geometric_progression.rs#L123
+
 
 // region: matrix
 
