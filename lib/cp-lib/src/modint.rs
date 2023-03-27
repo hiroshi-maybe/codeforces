@@ -126,7 +126,7 @@ pub mod mod_int {
 pub use mod_int::*;
 pub type ModInt1000000007 = mod_int::ModInt<Mod1000000007>;
 pub type ModInt998244353 = mod_int::ModInt<Mod998244353>;
-// type ModInt = ModInt998244353;
+pub type ModInt = ModInt998244353;
 // type ModInt = ModInt1000000007;
 
 // endregion: mod_int

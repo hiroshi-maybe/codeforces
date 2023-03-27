@@ -31,17 +31,31 @@
 // #[rustfmt::skip]
 #[allow(dead_code)]
 pub mod matrix {
+    use crate::modint::ModInt;
     use std::ops::{Add, AddAssign, Index, Mul, MulAssign};
 
     pub trait MatrixElement {
         type InternalValue: Clone + Copy;
-        const ZERO: Self::InternalValue;
-        const ONE: Self::InternalValue;
+        fn zero() -> Self::InternalValue;
+        fn one() -> Self::InternalValue;
     }
     impl MatrixElement for i64 {
         type InternalValue = Self;
-        const ZERO: Self::InternalValue = 0;
-        const ONE: Self::InternalValue = 1;
+        fn zero() -> Self::InternalValue {
+            0
+        }
+        fn one() -> Self::InternalValue {
+            1
+        }
+    }
+    impl MatrixElement for ModInt {
+        type InternalValue = Self;
+        fn zero() -> Self::InternalValue {
+            ModInt::from(0)
+        }
+        fn one() -> Self::InternalValue {
+            ModInt::from(1)
+        }
     }
 
     #[derive(Debug, Default, Hash, PartialEq, Eq)]
@@ -52,7 +66,7 @@ pub mod matrix {
     }
     impl<Element: MatrixElement> Matrix<Element> {
         pub fn new(n: usize, m: usize) -> Self {
-            let dat = vec![vec![Element::ZERO; m]; n];
+            let dat = vec![vec![Element::zero(); m]; n];
             Matrix { n, m, dat }
         }
     }
@@ -65,7 +79,7 @@ pub mod matrix {
             assert_eq!(self.n, self.m);
             let mut res = Matrix::<Element>::new(self.n, self.n);
             for i in 0..self.n {
-                res.dat[i][i] = Element::ONE;
+                res.dat[i][i] = Element::one();
             }
             let mut a = self.clone();
             while exp > 0 {
@@ -174,6 +188,8 @@ pub use matrix::Matrix;
 
 #[cfg(test)]
 mod tests_matrix {
+    use crate::modint::ModInt;
+
     use super::*;
 
     #[test]
@@ -222,6 +238,14 @@ mod tests_matrix {
     #[test]
     fn test_pow() {
         let a = Matrix::<i64>::from(&vec![vec![1, 2], vec![3, 4]]);
+        let expected = a.clone() * a.clone() * a.clone();
+
+        assert_eq!(a.pow(3), expected);
+
+        let a = Matrix::<ModInt>::from(&vec![
+            vec![ModInt::from(10101010), ModInt::from(20202020)],
+            vec![ModInt::from(30303030), ModInt::from(40404040)],
+        ]);
         let expected = a.clone() * a.clone() * a.clone();
 
         assert_eq!(a.pow(3), expected);
