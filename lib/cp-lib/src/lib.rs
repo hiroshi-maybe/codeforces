@@ -1,3 +1,4 @@
+pub mod bipartite_matching;
 pub mod bit;
 pub mod bitmask;
 pub mod gcd;
@@ -14,6 +15,7 @@ pub mod segment_tree;
 pub mod trie;
 pub mod union_find;
 
+pub use bipartite_matching::max_bipartite_matching;
 pub use bit::BIT;
 pub use bitmask::{BitMask, BitSet};
 pub use gcd::{gcd, lcm};
